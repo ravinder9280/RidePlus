@@ -1,10 +1,10 @@
 import RideCard from '@/components/ride/ride-card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import UserProfileHeader from '@/components/user/userProfileHeader';
 import { prisma } from '@/lib/prisma';
 import { Ride } from '@/lib/types/Ride';
 import { Star } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
 
@@ -13,7 +13,7 @@ const UserPage =  async ({params}:{params:{id:string}}) => {
     const user = await prisma.user.findUnique({
         where: { id: params.id },
         select: {
-            id: true, name: true, imageUrl: true, rating: true,email:true,clerkId:true,
+            id: true, name: true, imageUrl: true, rating: true,email:true,
             rides: { take: 5, orderBy: { createdAt: "desc" }, select: { id: true, fromText: true, toText: true, fromLat: true, fromLng: true, toLat: true, toLng: true, departureAt: true, perSeatPrice: true, status: true, seatsTotal: true, estTotalFare: true, service: true, seatsAvailable: true, owner: { select: { id: true, name: true, email: true, imageUrl: true, rating: true, clerkId: true, phone: true } } } },
             memberships: { take: 5, orderBy: { createdAt: "desc" }, select: { status: true, ride: { select: { id: true, fromText: true, toText: true, departureAt: true, status: true } } } }
         }
@@ -23,8 +23,9 @@ const UserPage =  async ({params}:{params:{id:string}}) => {
   return (
       <div className='p-2 mx-auto container xl:p-0 flex flex-col gap-4'>
           <div className='flex items-center gap-2'>
-            <UserProfileHeader clerkId={user?.clerkId||''}  imageUrl={user?.imageUrl||''}/>
-              
+              <div className='rounded-full ring-2 ring-primary'>
+                  <Image className='rounded-full h-24' src={user?.imageUrl||''} alt='hello' height={96} width={96}/>
+              </div>
               <div className='flex flex-col flex-1'>
                   <span className='text-2xl gap-1 font-bold '>{user?.name  || "User"}</span>
                   <span className='text-sm text-muted-foreground line-clamp-1'>{ user?.email||"user@mail.com"}</span>

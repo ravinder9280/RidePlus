@@ -2,7 +2,7 @@
 const nextConfig = {
   output: "standalone",
   images: {
-    domains: ["img.clerk.com","mjgabypipvmocqpgnytf.supabase.co"], // ✅ allow Clerk profile images
+    domains: ["img.clerk.com"], // ✅ allow Clerk profile images
   },
 
   eslint: {
