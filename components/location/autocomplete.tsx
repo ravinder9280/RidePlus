@@ -30,6 +30,7 @@ export type Props = {
 export type Suggestion = {
   id: string;
   text: string;
+  label:string;
   lat: number;
   lng: number;
 };
@@ -85,6 +86,7 @@ export default function MapboxAutocomplete({
 
         const suggestions: Suggestion[] = (data.features ?? []).map((f: any) => ({
           id: f.id,
+          label:f.text,
           text: f.place_name as string,
           lng: Number(f.center?.[0]),
           lat: Number(f.center?.[1]),
@@ -144,10 +146,15 @@ export default function MapboxAutocomplete({
                       <CommandItem className="py-4 text-muted-foreground" key={s.id} value={s.text} onSelect={() => choose(s)} asChild>
                        
                         <div className="flex items-center gap-2 justify-between text-wrap">
-                          
-                          <span>
+                          <div className="flex-1">
+                            <h3 className="font-semibold pb-1">
+                              {s.label}
+                            </h3>
+
+                          <p className="line-clamp-1">
                           {s.text}
-                          </span>
+                          </p>
+                          </div>
                           <ChevronRight/>
                         </div>
                       </CommandItem>
