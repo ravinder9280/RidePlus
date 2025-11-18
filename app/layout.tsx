@@ -6,7 +6,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from '@clerk/themes'
 import { Toaster, } from 'sonner'
 import { ThemeProvider } from "@/components/theme-provider"
-import { Bot } from "lucide-react";
 import ChatDialog from "@/components/chat/chatDialog";
 
 const outfit = Outfit({
