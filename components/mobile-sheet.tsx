@@ -10,7 +10,7 @@ import UserMobileActions from './auth/UserMobileActions'
 const MobileNav = ({ navigationItems, pathname }: { navigationItems: { label: string, href: string, icon: React.ElementType }[], pathname: string }) => {
         
 
-
+console.log(pathname)
     return (
         <Sheet>
             <SheetTrigger className=' p-2 rounded-full hover:bg-muted md:hidden' >
@@ -43,7 +43,7 @@ const MobileNav = ({ navigationItems, pathname }: { navigationItems: { label: st
 
                         {navigationItems.map((item) => {
                             const isActive =
-                                pathname === item.href || pathname.startsWith(item.href + "/");
+                                pathname === item.href;
 
                             return (
                                 <div key={item.label} className="py-2">

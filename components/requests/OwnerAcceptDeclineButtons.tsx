@@ -6,6 +6,7 @@ import { acceptRequest, declineRequest } from "@/actions/rides/owner";
 import { Spinner } from "../ui/spinner";
 import { useSWRConfig } from "swr";
 import { toast } from "sonner";
+import { ConfirmationAlertDialogWrapper } from "../common/ConfirmationDialog";
 
 type IncomingRequest = {
     id: string;
@@ -101,13 +102,19 @@ export default function AcceptDeclineButtons({
 
     return (
         <div className="flex gap-2">
-            <Button size="sm" variant="outline" disabled={disabled} onClick={accept}>
+            <ConfirmationAlertDialogWrapper title="Accept Request"  btnLabel="Accept">
+
+            <Button   disabled={disabled} onClick={accept}>
                 {accepting ? (<><Spinner /><span>Accepting</span></>) : <span>Accept</span>}
             </Button>
+            </ConfirmationAlertDialogWrapper>
+            <ConfirmationAlertDialogWrapper triggerVariant={"destructive"} title="Decline Request" Description=" decline this request" btnLabel="Decline">
 
-            <Button size="sm" variant="destructive" disabled={disabled} onClick={decline}>
-                {declining ? (<><Spinner /><span>Declining</span></>) : <span>Decline</span>}
+
+            <Button variant="destructive" disabled={disabled} onClick={decline}>
+                {declining ? (<><Spinner /><span>Declining</span></>) : <span>Confirm</span>}
             </Button>
+            </ConfirmationAlertDialogWrapper>
         </div>
     );
 }

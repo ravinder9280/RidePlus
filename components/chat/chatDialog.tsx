@@ -12,6 +12,7 @@ import { useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 type ChatMessage = { type: 'user' | 'ai'; text: string };
 
+
 const SYSTEM_PROMPT = `
 You are RidePlus AI, an expert assistant for the RidePlus ride sharing platform
 (similar to BlaBlaCar).

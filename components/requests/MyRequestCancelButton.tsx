@@ -6,6 +6,7 @@ import { cancelMyRequest } from "@/actions/rides/cancel";
 import { Spinner } from "../ui/spinner";
 import { useSWRConfig } from "swr";
 import { toast } from "sonner";
+import { ConfirmationAlertDialogWrapper } from "../common/ConfirmationDialog";
 
 type RideMemberRow = {
     id: string;
@@ -28,9 +29,10 @@ export default function CancelRequestButton({
     const { mutate } = useSWRConfig();
 
     return (
+        <ConfirmationAlertDialogWrapper triggerClassName="border-destructive" title="Cancel Request" Description=" Cancel this Request" btnLabel="Cancel">
+
         <Button
-            size="sm"
-            variant="outline"
+            variant="destructive"
             disabled={pending}
             onClick={() =>
                 start(async () => {
@@ -67,8 +69,10 @@ export default function CancelRequestButton({
                     <span>Cancelling</span>
                 </>
             ) : (
-                <span>Cancel</span>
+                <span>Confirm</span>
             )}
         </Button>
+        </ConfirmationAlertDialogWrapper>
+
     );
 }
