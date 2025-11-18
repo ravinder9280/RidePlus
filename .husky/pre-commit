@@ -1,1 +1,1 @@
-bunx lint-staged --concurrent=false --debug
+bunx lint-staged --concurrent=false
