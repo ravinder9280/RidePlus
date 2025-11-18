@@ -5,8 +5,7 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
-.env
-.env.local
+
 
 # testing
 /coverage
@@ -17,6 +16,11 @@
 
 # production
 /build
+
+
+# local env files
+.env*.local
+.env
 
 # misc
 .DS_Store
@@ -36,6 +40,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+gait/custom-merge-driver.sh
+.gait/state.json
+/.gait/
+
+# cursorboost
+snapshot.txt
+.cursorboost/
 
 # clerk configuration (can include secrets)
 /.clerk/

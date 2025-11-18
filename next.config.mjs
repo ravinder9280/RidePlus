@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  output: 'standalone',
   images: {
-    domains: ["img.clerk.com"], // ✅ allow Clerk profile images
+    domains: ['img.clerk.com'], // ✅ allow Clerk profile images
   },
 
   eslint: {
