@@ -101,7 +101,7 @@ export default function MapboxAutocomplete({
     }, 250);
 
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [query, TOKEN, limit, types, country, proximity, canSearch]);
 
   const choose = (s: Suggestion) => {
