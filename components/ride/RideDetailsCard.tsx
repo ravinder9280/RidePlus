@@ -131,9 +131,94 @@ export function RideDetailsCard({
 
     return (
         <Card className='  bg-muted/20  '>
+            <div className="fixed bottom-0 left-0 w-full border-t bg-muted p-4 z-[49] shadow-lg ">
+                <div className=" flex mx-auto max-w-7xl items-center justify-between">
+                    <div>
+                        <p className="text-base md:text-lg font-semibold">₹{perSeatPrice}</p>
+                        <p className="text-xs md:text-sm text-muted-foreground">per Seat Price</p>
+                    </div>
+                    <div>
+                        {memberStatus !== 'NONE' && memberStatus !== 'CANCELLED' ? (
+                            <Button disabled size="lg" className={memberStatusMap[memberStatus].color} variant="secondary">
+
+                                {memberStatusMap[memberStatus].label}
+                                {memberStatusMap[memberStatus].icon}
+
+                            </Button>
+                        ) : (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button className='h-11' disabled={isRequestDisabled} size={'lg'} >
+                                        Request ride <ArrowRight size={20} />
+                                    </Button>
+                                </DialogTrigger>
+
+                                    <DialogContent onOpenAutoFocus={(e) => {
+                                        e.preventDefault(); // stops Radix from focusing the first focusable element
+                                    }} showCloseButton={false} forceMount className="sm:max-w-[425px] z-[1000]">
+                                    <DialogHeader>
+                                        <div className="flex justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <div>
+                                                    <Image height={20} width={20} className="w-10 h-10 rounded-full" alt="" src={owner?.imageUrl || ''} />
+                                                </div>
+                                                <div className="flex flex-col items-start">
+                                                    <h3 className="font-bold">{owner?.name}</h3>
+                                                        <div className="text-muted-foreground flex items-center text-sm gap-1"> <span>
+                                                            <Star size={16} fill="yellow" stroke="yellow" />
+                                                        </span>
+                                                            {owner?.rating}</div>                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col items-center justify-center">
+                                                <span className="text-xs text-muted-foreground">Per Seat Price</span>
+                                                <span className="rounded bg-primary/5 px-2 py-1 text-sm text-primary font-medium">
+                                                    ₹{perSeatPrice}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </DialogHeader>
+
+                                    <form
+                                        action={async (formData) => {
+                                            await clientAfterSubmit(formData);
+                                        }}
+                                    >
+                                        <div className="grid gap-4">
+                                            <div>
+                                                <Badge size="sm" variant="teal-subtle">Seats Available : {seatsAvailable}</Badge>
+                                            </div>
+
+                                            <RidePin lineClampClass="line-clamp-1" fromText={fromText || 'Location'} toText={toText || 'Location'} />
+
+                                            <div className="grid mt-4 gap-3">
+                                                <input type="hidden" name="rideId" value={String(rideId)} />
+                                                <Label className="text-sm text-muted-foreground" htmlFor="seats">Number of seats</Label>
+                                                <SeatSelector min={1} max={seatsAvailable} />
+                                            </div>
+                                        </div>
+
+                                        <DialogFooter className="mt-4">
+                                            <DialogClose asChild>
+                                                <Button ref={closeRef} type="button" variant="outline">Cancel</Button>
+                                            </DialogClose>
+
+                                            <SubmitButton />
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                    </div>
+
+                    
+                </div>
+            </div>
+
+            
             <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                    <h2>Ride Details</h2>
+                    <h2>Ride Owner</h2>
                     <Badge variant={isExpired ? 'red-subtle' : 'green-subtle'}>
                         {isExpired ? 'Expired' : 'Active'}
                     </Badge>
@@ -154,21 +239,6 @@ export function RideDetailsCard({
                                 {owner?.rating}</div>
                         </div>
                     </div>
-
-                    <div className="flex flex-col items-center justify-center">
-                        <span className="text-xs text-muted-foreground">Per Seat Price</span>
-                        <span className="rounded bg-primary/5 px-2 py-1 text-sm text-primary font-medium">
-                            ₹{perSeatPrice}
-                        </span>
-                    </div>
-                </div>
-                <div>
-                    <Badge size="sm" variant="blue">Seats Available : {seatsAvailable}</Badge>
-                </div>
-
-                <Separator />
-
-                <div className="flex justify-between w-full items-center">
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button
@@ -231,83 +301,11 @@ export function RideDetailsCard({
                         </DialogContent>
                     </Dialog>
 
-
-                    <div>
-                        {memberStatus !== 'NONE' && memberStatus !== 'CANCELLED' ? (
-                            <Button disabled size="lg" className={memberStatusMap[memberStatus].color} variant="secondary">
-
-                                {memberStatusMap[memberStatus].label}
-                                {memberStatusMap[memberStatus].icon}
-
-                            </Button>
-                        ) : (
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button disabled={isRequestDisabled} size="lg">
-                                        Request ride <ArrowRight size={20} />
-                                    </Button>
-                                </DialogTrigger>
-
-                                    <DialogContent onOpenAutoFocus={(e) => {
-                                        e.preventDefault(); // stops Radix from focusing the first focusable element
-                                    }} showCloseButton={false} forceMount className="sm:max-w-[425px] z-[1000]">
-                                    <DialogHeader>
-                                        <div className="flex justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <div>
-                                                    <Image height={20} width={20} className="w-10 h-10 rounded-full" alt="" src={owner?.imageUrl || ''} />
-                                                </div>
-                                                <div className="flex flex-col items-start">
-                                                    <h3 className="font-bold">{owner?.name}</h3>
-                                                        <div className="text-muted-foreground flex items-center text-sm gap-1"> <span>
-                                                            <Star size={16} fill="yellow" stroke="yellow" />
-                                                        </span>
-                                                            {owner?.rating}</div>                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-col items-center justify-center">
-                                                <span className="text-xs text-muted-foreground">Per Seat Price</span>
-                                                <span className="rounded bg-primary/5 px-2 py-1 text-sm text-primary font-medium">
-                                                    ₹{perSeatPrice}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </DialogHeader>
-
-                                    <form
-                                        action={async (formData) => {
-                                            await clientAfterSubmit(formData);
-                                        }}
-                                    >
-                                        <div className="grid gap-4">
-                                            <div>
-                                                <Badge size="sm" variant="teal-subtle">Seats Available : {seatsAvailable}</Badge>
-                                            </div>
-
-                                            <RidePin lineClampClass="line-clamp-1" fromText={fromText || 'Location'} toText={toText || 'Location'} />
-
-                                            <div className="grid mt-4 gap-3">
-                                                <input type="hidden" name="rideId" value={String(rideId)} />
-                                                <Label className="text-sm text-muted-foreground" htmlFor="seats">Number of seats</Label>
-                                                <SeatSelector min={1} max={seatsAvailable} />
-                                            </div>
-                                        </div>
-
-                                        <DialogFooter className="mt-4">
-                                            <DialogClose asChild>
-                                                <Button ref={closeRef} type="button" variant="outline">Cancel</Button>
-                                            </DialogClose>
-
-                                            <SubmitButton />
-                                        </DialogFooter>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-                        )}
-                    </div>
+                    
                 </div>
+               
 
-                <Separator />
+                
             </CardContent>
         </Card>
     );

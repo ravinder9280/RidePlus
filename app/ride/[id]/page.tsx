@@ -7,7 +7,9 @@ import { notFound } from 'next/navigation'
 import { currentUser } from "@clerk/nextjs/server"
 import type { MemberStatus } from '@/components/ride/RideDetailsCard'
 import { Separator } from '@/components/ui/separator'
-import {format} from 'date-fns'
+import { format } from 'date-fns'
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
 
 type PageProps = { params: { id: string } }
 
@@ -26,8 +28,8 @@ export default async function Page({ params }: PageProps) {
             status: true,
             seatsAvailable: true,
             id: true,
-            
-            
+
+
             owner: {
                 select: {
                     imageUrl: true,
@@ -35,12 +37,12 @@ export default async function Page({ params }: PageProps) {
                     name: true,
                     id: true,
                     clerkId: true,
-                    phone:true,
-                    
-                    
+                    phone: true,
+
+
                 }
             }
-            
+
         },
     })
 
@@ -85,36 +87,37 @@ export default async function Page({ params }: PageProps) {
 
 
     return (
-        <div className='mx-auto max-w-5xl  md:max-w-7xl'>
+        <div className='mx-auto max-w-5xl pb-20 md:max-w-7xl'>
+            
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                 <div className=' flex flex-col gap-4 col-span-2'>
-                    <h1 className='text-xl mt-2 font-bold'> 
+                    <h1 className='text-xl mt-2 font-bold'>
                         {format(new Date(ride.departureAt), "MMMM d, yyyy | h:mm a")}
 
                     </h1>
-                    
-                    <Separator/>
-                    
-                <div className='flex flex-col gap-4'>
 
-            
-            <RidePin lineClampClass={"line-clamp-2 max-w-xl"} fromText={ride.fromText} toText={ride.toText} />
+                    <Separator />
 
-        <MapLine
-                from={from} to={to}
+                    <div className='flex flex-col gap-4'>
 
-                    />
-                </div>
-                <RideDetailsCard
-                    seatsAvailable={ride.seatsAvailable}
-                    rideId={ride.id}
-                status={ride.status}
-                startsAt={ride.departureAt.toDateString()||''}
-                    owner={ride.owner}
-                perSeatPrice={ride.perSeatPrice || ''}
-                fromText={ride.fromText}
-                toText={ride.toText}
-                    memberStatus={memberStatus}
+
+                        <RidePin lineClampClass={"line-clamp-2 max-w-xl"} fromText={ride.fromText} toText={ride.toText} />
+
+                        <MapLine
+                            from={from} to={to}
+
+                        />
+                    </div>
+                    <RideDetailsCard
+                        seatsAvailable={ride.seatsAvailable}
+                        rideId={ride.id}
+                        status={ride.status}
+                        startsAt={ride.departureAt.toDateString() || ''}
+                        owner={ride.owner}
+                        perSeatPrice={ride.perSeatPrice || ''}
+                        fromText={ride.fromText}
+                        toText={ride.toText}
+                        memberStatus={memberStatus}
 
 
                     />
@@ -122,9 +125,9 @@ export default async function Page({ params }: PageProps) {
                 <div className='col-span-2 md:col-span-1 w-full '>
 
 
-                <RidePassengers rideId={ride.id} />
+                    <RidePassengers rideId={ride.id} />
                 </div>
             </div>
-            </div>
+        </div>
     )
 }

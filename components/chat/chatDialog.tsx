@@ -206,7 +206,7 @@ const ChatDialog = () => {
 
   return (
     <>
-      <div className="fixed bottom-14 md:bottom-20 right-4 z-50">
+      <div className="fixed bottom-5 md:bottom-20 right-4 z-[48]">
         {/* Chat Button */}
         {!isOpen && !isSheetOpen && (
           <button
