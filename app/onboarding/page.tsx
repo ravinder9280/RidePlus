@@ -28,10 +28,11 @@ async function saveProfile(formData: FormData) {
 
         const validatedData = phoneSchema.parse(rawData);
 
-        // 2) Persist to your DB (attach to the Clerk user row)
-        await prisma.user.update({
+        // 2) Persist to your DB (attach to the Clerk user row), creating row if missing
+        await prisma.users.upsert({
             where: { clerkId: userId },
-            data: { phone: validatedData.phone },
+            update: { phone: validatedData.phone },
+            create: { clerkId: userId, phone: validatedData.phone },
         });
 
         // 3) Flip the flag in Clerk so middleware lets the user through

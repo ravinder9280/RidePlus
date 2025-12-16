@@ -4,7 +4,7 @@ import { Ride } from '@/lib/types/Ride';
 import React from 'react'
 
 const UserAllRides = async ({ params }: { params: { id: string } }) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
         where: { id: params.id },
         select: {
             id: true, name: true,

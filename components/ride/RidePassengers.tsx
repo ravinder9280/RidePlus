@@ -16,10 +16,10 @@ function toWhatsAppLink(phone?: string | null) {
 export default async function RidePassengers({ rideId }: Props) {
     // Current viewer
     const { userId: clerkId } =  await auth();
-    const me = clerkId ? await prisma.user.findUnique({ where: { clerkId } }) : null;
+    const me = clerkId ? await prisma.users.findUnique({ where: { clerkId } }) : null;
 
     // Fetch ride + accepted members (with phones)
-    const ride = await prisma.ride.findUnique({
+    const ride = await prisma.rides.findUnique({
         where: { id: rideId },
         select: {
             id: true,

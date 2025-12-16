@@ -9,7 +9,7 @@ export async function GET() {
         if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
         // All pending requests across rides you own
-        const rows = await prisma.rideMember.findMany({
+        const rows = await prisma.ride_members.findMany({
             where: {
                 status: "PENDING",
                 ride: { owner: { clerkId: userId } },

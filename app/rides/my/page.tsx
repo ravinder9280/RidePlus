@@ -41,7 +41,7 @@ const MyRides = async () => {
         redirect("/sign-in");
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
         where: { clerkId: clerk.id },
         select: { id: true},
     });
@@ -50,7 +50,7 @@ const MyRides = async () => {
         redirect("/onboarding");
     }
 
-    const rides = await prisma.ride.findMany({
+    const rides = await prisma.rides.findMany({
         where: {
             OR: [
                 { ownerId: user.id },

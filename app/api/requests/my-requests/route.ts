@@ -14,13 +14,13 @@ export async function GET(req: Request) {
         const filter = (url.searchParams.get("filter") ?? "ALL") as
             | "ALL" | "PENDING" | "ACCEPTED" | "DECLINED" | "CANCELLED";
     
-        const me = await prisma.user.findUnique({ where: { clerkId: userId } });
+        const me = await prisma.users.findUnique({ where: { clerkId: userId } });
         if (!me) return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     
         const where: { userId: string; status?: "PENDING" | "ACCEPTED" | "DECLINED" | "CANCELLED" } = { userId: me.id };
         if (filter !== "ALL") where.status = filter;
     
-        const rows = await prisma.rideMember.findMany({
+        const rows = await prisma.ride_members.findMany({
             where,
             include: { ride: { include: { owner: true } } },
             orderBy: { createdAt: "desc" },

@@ -31,11 +31,11 @@ export async function requestRide(formData: FormData) {
         const { rideId, seats } = parsed.data;
 
         // Get user first to avoid race conditions
-        const user = await prisma.user.findUnique({ where: { clerkId: userId }, select: { id: true, name: true } });
+        const user = await prisma.users.findUnique({ where: { clerkId: userId }, select: { id: true, name: true } });
         if (!user) return { ok: false, message: "User missing in DB" };
 
         // Check if user already has a request for this ride
-        const alreadyRequested = await prisma.rideMember.findFirst({
+        const alreadyRequested = await prisma.ride_members.findFirst({
             where: {
                 rideId,
                 userId: user.id,
@@ -43,7 +43,7 @@ export async function requestRide(formData: FormData) {
         });
         if (alreadyRequested) return { ok: false, message: "You Have Already requested for this ride" };
 
-        const ride = await prisma.ride.findUnique({
+        const ride = await prisma.rides.findUnique({
             where: { id: rideId },
             select: {
                 id: true,
@@ -64,7 +64,7 @@ export async function requestRide(formData: FormData) {
 
         let member;
         try {
-            member = await prisma.rideMember.create({
+            member = await prisma.ride_members.create({
                 data: {
                     rideId,
                     userId: user.id,

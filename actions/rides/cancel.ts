@@ -20,28 +20,28 @@ export async function cancelMyRequest(memberID: string) {
         if (!parsed.success) return { ok: false, message: "Invalid input" };
         const { memberId } = parsed.data;
 
-        const member = await prisma.rideMember.findUnique({
+        const member = await prisma.ride_members.findUnique({
             where: { id: memberId },
             include: { ride: true, user: true },
         });
         if (!member) return { ok: false, message: "Not found" };
 
-        const me = await prisma.user.findUnique({ where: { clerkId: userId } });
+        const me = await prisma.users.findUnique({ where: { clerkId: userId } });
         if (!me || me.id !== member.userId) return { ok: false, message: "Not your request" };
 
         if (member.status === "ACCEPTED") {
             await prisma.$transaction(async (tx) => {
-                await tx.ride.update({
+                await tx.rides.update({
                     where: { id: member.rideId },
                     data: { seatsAvailable: { increment: member.seatsRequested } },
                 });
-                await tx.rideMember.update({
+                await tx.ride_members.update({
                     where: { id: member.id },
                     data: { status: "CANCELLED" },
                 });
             });
         } else {
-            await prisma.rideMember.update({
+            await prisma.ride_members.update({
                 where: { id: member.id },
                 data: { status: "CANCELLED" },
             });

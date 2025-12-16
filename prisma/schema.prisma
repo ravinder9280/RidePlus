@@ -1,6 +1,5 @@
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x", "debian-openssl-1.1.x"]
 }
 
@@ -8,10 +7,90 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+  
 }
-        
-        
-// Enums
+
+model users {
+  id          String       @id @default(cuid())
+  clerkId     String       @unique
+  email       String?      @unique
+  phone       String?      @unique
+  name        String?
+  firstName   String?
+  lastName    String?
+  imageUrl    String?
+  rating      Int          @default(5)
+  rides       rides[]       @relation("UserRides")
+  memberships ride_members[]
+
+  @@index([clerkId])
+}
+
+model rides {
+  id             String       @id @default(cuid())
+  ownerId        String
+  fromText       String
+  toText         String
+  fromLat        Float
+  fromLng        Float
+  toLat          Float
+  toLng          Float
+  departureAt    DateTime
+  seatsTotal     Int
+  seatsAvailable Int
+  estTotalFare   Int
+  perSeatPrice   Int
+  service        RideService
+  shareUrlEnc    String?
+  shareUrlHash   String?      @unique
+  status         RideStatus   @default(ACTIVE)
+  isVerified     Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  owner          users        @relation("UserRides", fields: [ownerId], references: [id], onDelete: Cascade)
+  members        ride_members[]
+  embedding      ride_embeddings?
+  canonicalText  String?
+
+  @@index([status, departureAt])
+  @@index([ownerId])
+  @@index([fromLat, fromLng])
+  @@index([toLat, toLng])
+}
+
+model ride_members {
+  id             String       @id @default(cuid())
+  rideId         String
+  userId         String
+  status         MemberStatus @default(PENDING)
+  fareShare      Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  seatsRequested Int          @default(1)
+  ride           rides         @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  user           users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  canonicalText  String?
+  @@unique([rideId, userId])
+  @@index([userId])
+}
+model ride_embeddings {
+  rideId    String  @id
+  ride      rides    @relation(fields: [rideId], references: [id], onDelete: Cascade)
+
+  embedding Unsupported("vector(768)")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model webhook_event {
+  id        String   @id
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
 enum RideService {
   UBER
   OLA
@@ -29,86 +108,4 @@ enum MemberStatus {
   ACCEPTED
   DECLINED
   CANCELLED
-}
-
-// Models
-model User {
-  id         String  @id @default(cuid())
-  clerkId    String  @unique
-  email      String? @unique
-  phone      String? @unique
-  name       String?
-  firstName  String?
-  lastName   String?
-  imageUrl   String?
-  rating     Int     @default(5)
-
-  rides      Ride[]  @relation("UserRides")
-  memberships RideMember[]
-
-  @@index([clerkId])
-}
-
-model Ride {
-  id              String       @id @default(cuid())
-  ownerId         String
-  owner           User         @relation("UserRides", fields: [ownerId], references: [id], onDelete: Cascade)
-
-  fromText        String
-  toText          String
-  fromLat         Float
-  fromLng         Float
-  toLat           Float
-  toLng           Float
-
-  departureAt     DateTime
-  seatsTotal      Int
-  seatsAvailable  Int
-
-  estTotalFare    Int
-  perSeatPrice    Int
-
-  service         RideService
-
-  shareUrlEnc     String?
-  shareUrlHash    String? @unique
-
-  status          RideStatus @default(ACTIVE)
-  isVerified      Boolean    @default(false)
-
-  members         RideMember[]
-
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-
-  @@index([status, departureAt])
-  @@index([ownerId])
-  @@index([fromLat, fromLng])
-  @@index([toLat, toLng])
-}
-
-model RideMember {
-  id         String       @id @default(cuid())
-  rideId     String
-  userId     String
-
-  ride       Ride         @relation(fields: [rideId], references: [id], onDelete: Cascade)
-  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  status     MemberStatus @default(PENDING)
-  seatsRequested Int          @default(1)   
-  fareShare  Int
-
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-
-  @@unique([rideId, userId])
-  @@index([userId])
-}
-
-model WebhookEvent {
-  id        String   @id
-  createdAt DateTime @default(now())
-
-  @@index([createdAt])
 }

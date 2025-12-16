@@ -14,7 +14,7 @@ import { ArrowRight } from 'lucide-react'
 type PageProps = { params: { id: string } }
 
 export default async function Page({ params }: PageProps) {
-    const ride = await prisma.ride.findUnique({
+    const ride = await prisma.rides.findUnique({
         where: { id: params.id },
         select: {
             fromLat: true,
@@ -59,9 +59,9 @@ export default async function Page({ params }: PageProps) {
         const clerk = await currentUser()
         const clerkId = clerk?.id
         if (clerkId) {
-            const user = await prisma.user.findUnique({ where: { clerkId }, select: { id: true } })
+            const user = await prisma.users.findUnique({ where: { clerkId }, select: { id: true } })
             if (user?.id) {
-                const member = await prisma.rideMember.findUnique({
+                const member = await prisma.ride_members.findUnique({
                     where: { rideId_userId: { rideId: ride.id, userId: user.id } },
                     select: { status: true },
                 })

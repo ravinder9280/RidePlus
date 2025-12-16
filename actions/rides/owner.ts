@@ -20,7 +20,7 @@ export async function acceptRequest(memberID: string) {
         if (!parsed.success) return { ok: false, message: "Invalid input" };
         const { memberId } = parsed.data;
 
-        const member = await prisma.rideMember.findUnique({
+        const member = await prisma.ride_members.findUnique({
             where: { id: memberId },
             include: { ride: { include: { owner: true } } },
         });
@@ -34,17 +34,17 @@ export async function acceptRequest(memberID: string) {
         }
 
         const updated = await prisma.$transaction(async (tx) => {
-            await tx.ride.update({
+            await tx.rides.update({
                 where: { id: member.rideId },
                 data: { seatsAvailable: { decrement: member.seatsRequested } },
             });
-            return tx.rideMember.update({
+            return tx.ride_members.update({
                 where: { id: member.id },
                 data: { status: "ACCEPTED" },
             });
         });
 
-        const rider = await prisma.user.findUnique({
+        const rider = await prisma.users.findUnique({
             where: { id: member.userId },
             select: { email: true, name: true },
         });
@@ -86,7 +86,7 @@ export async function declineRequest(memberID:string) {
         if (!parsed.success) return { ok: false, message: "Invalid input" };
         const { memberId } = parsed.data;
 
-        const member = await prisma.rideMember.findUnique({
+        const member = await prisma.ride_members.findUnique({
             where: { id: memberId },
             include: { ride: { include: { owner: true } } },
         });
@@ -94,13 +94,13 @@ export async function declineRequest(memberID:string) {
         if (member.ride.owner.clerkId !== userId) return { ok: false, message: "Not your ride" };
         if (member.status !== "PENDING") return { ok: false, message: "Request is not pending" };
 
-        const updated = await prisma.rideMember.update({
+        const updated = await prisma.ride_members.update({
             where: { id: member.id },
             data: { status: "DECLINED" },
         });
 
         // Send email notification (non-blocking)
-        const rider = await prisma.user.findUnique({
+        const rider = await prisma.users.findUnique({
             where: { id: member.userId },
             select: { email: true, name: true },
         });

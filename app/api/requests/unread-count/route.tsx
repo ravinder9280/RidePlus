@@ -8,7 +8,7 @@ export async function GET() {
     const userId=user?.id
     if (!userId) return NextResponse.json({ count: 0 });
 
-    const count = await prisma.rideMember.count({
+    const count = await prisma.ride_members.count({
         where: {
             status: "PENDING",
             ride: {

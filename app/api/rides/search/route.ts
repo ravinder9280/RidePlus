@@ -106,7 +106,7 @@ export async function GET(req: NextRequest) {
       pageSize,
     } = parsed.data;
 
-    const where: Prisma.RideWhereInput = {
+    const where: Prisma.ridesWhereInput = {
       status: 'ACTIVE',
       seatsAvailable: { gte: seats },
     };
@@ -124,7 +124,7 @@ export async function GET(req: NextRequest) {
     if (verifiedOnly) where.isVerified = true;
 
     // geo (coarse bbox to narrow DB scan)
-    const andFilters: Prisma.RideWhereInput[] = [];
+    const andFilters: Prisma.ridesWhereInput[] = [];
     const hasFrom = fromLat != null && fromLng != null;
     const hasTo = toLat != null && toLng != null;
 
@@ -145,7 +145,7 @@ export async function GET(req: NextRequest) {
     if (andFilters.length) where.AND = andFilters;
 
     // default DB ordering of
-    let orderBy: Prisma.RideOrderByWithRelationInput[] = [
+    let orderBy: Prisma.ridesOrderByWithRelationInput[] = [
       { createdAt: 'desc' },
     ];
     if (sort === 'price')
@@ -157,7 +157,7 @@ export async function GET(req: NextRequest) {
 
     // Pull a page from DB (already narrowed by bbox/time/filters)
     const [rawItems, totalItemCount] = await Promise.all([
-      prisma.ride.findMany({
+      prisma.rides.findMany({
         where,
         orderBy,
         skip,
@@ -168,7 +168,7 @@ export async function GET(req: NextRequest) {
           },
         },
       }),
-      prisma.ride.count({ where }),
+      prisma.rides.count({ where }),
     ]);
 
     // If we have coords, compute precise distance, optionally filter and sort

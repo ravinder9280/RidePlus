@@ -8,7 +8,7 @@ export default async function OwnerRequests({ rideId }: { rideId: string }) {
     const userId=user?.id
     if (!userId) return null;
 
-    const ride = await prisma.ride.findUnique({
+    const ride = await prisma.rides.findUnique({
         where: { id: rideId },
         include: {
             owner: { select: { id: true, clerkId: true } },

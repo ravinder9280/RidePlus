@@ -17,7 +17,7 @@ const userButtonAppearance = {
 const UserPage =  async ({params}:{params:{id:string}}) => {
     const clerkUser= await  auth()
     // pseudo
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
         where: { id: params.id },
         select: {
             id: true, name: true, imageUrl: true, rating: true,email:true,clerkId:true,

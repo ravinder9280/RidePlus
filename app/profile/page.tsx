@@ -9,7 +9,7 @@ const ProfilePage = async () => {
         redirect('/sign-in')
     }
     
-    const dbUser = await prisma.user.findUnique({
+    const dbUser = await prisma.users.findUnique({
         where: { clerkId: clerkUser.id },
         select: { id: true },
     })

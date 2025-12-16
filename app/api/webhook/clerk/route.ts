@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     try {
         // Idempotency: ignore if we’ve already processed this svix-id
         // Create a small row keyed by svix message id
-        await prisma.webhookEvent.create({ data: { id } });
+        await prisma.webhook_event.create({ data: { id } });
     } catch {
         // duplicate svix-id -> already processed
         return NextResponse.json({ ok: true, deduped: true });
@@ -95,25 +95,25 @@ export async function POST(req: NextRequest) {
 
         try {
             await prisma.$transaction(async (tx) => {
-                const byClerk = await tx.user.findUnique({ where: { clerkId } });
+                const byClerk = await tx.users.findUnique({ where: { clerkId } });
                 if (byClerk) {
-                    await tx.user.update({
+                    await tx.users.update({
                         where: { clerkId },
                         data: { email: email ?? undefined, firstName, lastName, imageUrl, name },
                     });
                     return;
                 }
                 if (email) {
-                    const byEmail = await tx.user.findUnique({ where: { email } });
+                    const byEmail = await tx.users.findUnique({ where: { email } });
                     if (byEmail) {
-                        await tx.user.update({
+                        await tx.users.update({
                             where: { email },
                             data: { clerkId, firstName, lastName, imageUrl, name },
                         });
                         return;
                     }
                 }
-                await tx.user.create({
+                await tx.users.create({
                     data: { clerkId, email: email ?? null, firstName, lastName, imageUrl, name, rating: 5 },
                 });
             });
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
         }
 
         try {
-            await prisma.user.deleteMany({ where: { clerkId: deletedData.id } });
+            await prisma.users.deleteMany({ where: { clerkId: deletedData.id } });
             return NextResponse.json({ ok: true, persisted: true });
         } catch (error: unknown) {
             const err = error as { message?: string };
@@ -155,3 +155,4 @@ export async function POST(req: NextRequest) {
     // Unhandled event types -> ok
     return NextResponse.json({ ok: true, skipped: type });
 }
+
