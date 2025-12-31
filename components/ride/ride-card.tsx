@@ -42,8 +42,8 @@ export default function RideCard({ r }: { r: Ride }) {
                     <Car className="" height={20} width={20} />
 
                     <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8 rounded-full overflow-hidden hover:ring-1 hover:ring-primary" >
-                            <Link href={`/user/${r.owner?.id}`}>
+                        <Avatar className="h-8 w-8 rounded-full flex items-center justify-center overflow-hidden hover:ring-1 hover:ring-primary" >
+                            <Link className="" href={`/user/${r.owner?.id}`}>
 
                                 <AvatarImage
                                     loading="lazy"
@@ -51,10 +51,10 @@ export default function RideCard({ r }: { r: Ride }) {
                                     alt="user pic"
                                     src={
                                         r.owner?.imageUrl
-                                            ? `${r.owner.imageUrl}?width=32&height=32&fit=crop`
+                                            ? `${r.owner.imageUrl}`
                                             : ""
                                     }
-                                />                                <AvatarFallback>{r.owner?.name?.[0] ?? "U"}</AvatarFallback>
+                                />                                <AvatarFallback >{r.owner?.name?.[0] ?? "U"}</AvatarFallback>
                             </Link>
                         </Avatar>
                         <div>

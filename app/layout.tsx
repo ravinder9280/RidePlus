@@ -8,6 +8,7 @@ import { Toaster, } from 'sonner'
 import { ThemeProvider } from "@/components/theme-provider"
 import ChatDialog from "@/components/chat/chatDialog";
 
+import * as Sentry from '@sentry/nextjs';
 const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-outfit',
@@ -15,10 +16,11 @@ const outfit = Outfit({
   weight: ['400', '500', '600', '700'], // load only what you need
 })
 
-export const metadata: Metadata = {
-  title: "RidePlus",
-  description: "Ride Plus is a platform for splitting rides Fares",
-};
+// export const metadata: Metadata = {
+//  
+// };
+
+
 
 export default function RootLayout({
   children,
@@ -57,4 +59,17 @@ export default function RootLayout({
     </html>
     </ClerkProvider>
   );
+}
+
+
+
+
+export function generateMetadata(): Metadata {
+  return {
+    title: "RidePlus",
+     description: "Ride Plus is a platform for splitting rides Fares",  
+       other: {
+      ...Sentry.getTraceData()
+    }
+  };
 }
