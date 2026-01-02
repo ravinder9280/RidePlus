@@ -7,7 +7,7 @@ import { Handshake } from 'lucide-react';
 
 export default async function RequestsHubPage() {
     return (
-        <main className="mx-auto container xl:p-0 p-2 md:p-6 space-y-6">
+        <div className="mx-auto container xl:p-0 p-2 md:p-6 space-y-6">
             <h1 className="text-xl flex items-center gap-2 font-semibold">
                 <Handshake/>
                 
@@ -32,6 +32,6 @@ export default async function RequestsHubPage() {
                     <MyRequestsList filter="ALL" />
                 </TabsContent>
             </Tabs>
-        </main>
+        </div>
     );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import RidePin from '../common/RidePin';
 
 
 
@@ -14,17 +15,20 @@ type Props = {
     from?: Coord;
     to?: Coord;
     heightClass?: string;
-   
+    fromText?: string;
+    toText?: string;
 };
 
 const ROUTE_SOURCE_ID = 'route';
 const ROUTE_LAYER_ID = 'route-line';
 
 
-export default function MapLine({
+export default function RideMap({
     from = { lat: 28.410484, lng: 77.31821 },
     to = { lat: 28.9, lng: 76.9 },
     heightClass = 'h-96',
+    fromText,
+    toText,
     
    
 }: Props) {
@@ -161,8 +165,12 @@ export default function MapLine({
    
 
     return (
-        <div className="space-y-4">
-            <div ref={mapContainerRef} className={`relative w-full ${heightClass} overflow-hidden`} />
+        <div className="realtive">
+            <div ref={mapContainerRef} className={`relative w-full h- ${heightClass} overflow-hidden`} />
+            <div className='absolute top-2 left-2  max-w-[80vw] bg-muted/80 p-2 rounded-lg'>
+                
+            <RidePin fromText={fromText || ''} toText={toText || ''} lineClampClass='line-clamp-1' />
+            </div>
 
            
 

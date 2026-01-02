@@ -1,15 +1,14 @@
-import RidePin from '@/components/common/RidePin'
-import MapLine from '@/components/map/map'
-import { RideDetailsCard } from '@/components/ride/RideDetailsCard'
-import RidePassengers from '@/components/ride/RidePassengers'
+import RideMap from '@/components/map/ride-map'
+import { RideDialog } from '@/app/ride/[id]/components/RideDialog'
+import RidePassengers from '@/app/ride/[id]/components/RidePassengers'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { currentUser } from "@clerk/nextjs/server"
-import type { MemberStatus } from '@/components/ride/RideDetailsCard'
-import { Separator } from '@/components/ui/separator'
+import type { MemberStatus } from '@/app/ride/[id]/components/RideDialog'
 import { format } from 'date-fns'
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import Image from 'next/image'
+import RideUserCard from './components/RideUserCard'
 
 type PageProps = { params: { id: string } }
 
@@ -28,6 +27,7 @@ export default async function Page({ params }: PageProps) {
             status: true,
             seatsAvailable: true,
             id: true,
+            createdAt: true,
 
 
             owner: {
@@ -38,6 +38,7 @@ export default async function Page({ params }: PageProps) {
                     id: true,
                     clerkId: true,
                     phone: true,
+                    email: true,
 
 
                 }
@@ -88,46 +89,115 @@ export default async function Page({ params }: PageProps) {
 
     return (
         <div className='mx-auto max-w-5xl pb-20 md:max-w-7xl'>
-            
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                <div className=' flex flex-col gap-4 col-span-2'>
-                    <h1 className='text-xl mt-2 font-bold'>
-                        {format(new Date(ride.departureAt), "MMMM d, yyyy | h:mm a")}
+            <RideMap
+                from={from} to={to}
+                heightClass='h-72'
+                fromText={ride.fromText}
+                toText={ride.toText}
 
-                    </h1>
+            />
 
-                    <Separator />
-
-                    <div className='flex flex-col gap-4'>
+            <div className=' space-y-8 p-2 rounded-2xl relative top-[-40px] bg-background z-40'>
 
 
-                        <RidePin lineClampClass={"line-clamp-2 max-w-xl"} fromText={ride.fromText} toText={ride.toText} />
 
-                        <MapLine
-                            from={from} to={to}
 
-                        />
+
+                {/* car detail */}
+                <div className='p-2 flex items-center justify-between shadow shadow-muted rounded-lg border'>
+                    <div>
+
+                        <h3 className='text-lg font-bold'>Toyota HR-V</h3>
+                        <div>
+                            <Badge size="sm" variant="teal-subtle">Seats Available : {ride.seatsAvailable}</Badge>
+                        </div>
                     </div>
-                    <RideDetailsCard
-                        seatsAvailable={ride.seatsAvailable}
-                        rideId={ride.id}
-                        status={ride.status}
-                        startsAt={ride.departureAt.toDateString() || ''}
-                        owner={ride.owner}
-                        perSeatPrice={ride.perSeatPrice || ''}
-                        fromText={ride.fromText}
-                        toText={ride.toText}
-                        memberStatus={memberStatus}
+                    <div>
+                        <Image src={'/white-car.png'} alt={'car'} width={130} height={130} className='' />
+                    </div>
 
-
-                    />
                 </div>
-                <div className='col-span-2 md:col-span-1 w-full '>
+
+
+                {/* user pfp */}
+                <RideUserCard memberStatus={memberStatus} ride={ride} />
+
+
+
+                {/* trip details */}
+                <div className='rounded-xl p-4 shadow border space-y-4'>
+                    <div>
+
+                        <h4 className='font-medium text-sm'>
+                            Trip Details
+                        </h4>
+                    </div>
+                    <div className=''>
+
+                        <h4 className='font-medium text-sm'>
+                            Pickup Point
+                        </h4>
+
+                        <p className='text-sm line-clamp-2 text-muted-foreground'>
+                            {ride.fromText}
+
+                        </p>
+
+
+                    </div>
+                    <div className=''>
+
+                        <h4 className='font-medium text-sm'>
+                            Destination
+                        </h4>
+
+                        <p className='text-sm line-clamp-2 text-muted-foreground'>
+                            {ride.toText}
+
+                        </p>
+
+
+                    </div>
+                    <div className=''>
+
+                        <h4 className='font-medium text-sm'>
+                            Departure time
+                        </h4>
+
+                        <p className='text-sm text-muted-foreground'>
+                            {format(new Date(ride.departureAt), "MMMM d, yyyy , h:mm a")}
+
+                        </p>
+
+
+                    </div>
+
+                </div>
+
+
+
+
+
+
+                <div className=' '>
 
 
                     <RidePassengers rideId={ride.id} />
                 </div>
             </div>
+            <RideDialog
+                seatsAvailable={ride.seatsAvailable}
+                rideId={ride.id}
+                status={ride.status}
+                startsAt={ride.departureAt.toDateString() || ''}
+                owner={ride.owner}
+                perSeatPrice={ride.perSeatPrice || ''}
+                fromText={ride.fromText}
+                toText={ride.toText}
+                memberStatus={memberStatus}
+
+
+            />
         </div>
     )
 }

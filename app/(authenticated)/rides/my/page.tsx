@@ -69,7 +69,7 @@ const MyRides = async () => {
     });
 
     return (
-        <main className="container mx-auto min-h-screen pt-4 ">
+        <main className="container mx-auto  min-h-screen pt-4 ">
             <div className="flex flex-col gap-2">
                 <div className="space-y-1">
                     <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">My rides</h1>

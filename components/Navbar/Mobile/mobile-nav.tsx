@@ -4,7 +4,7 @@ import type { ElementType } from 'react';
 
 import { cn } from '@/lib/utils';
 
-import UserMobileActions from './auth/UserMobileActions';
+import UserMobileActions from '../../auth/UserMobileActions';
 import {
   Sheet,
   SheetClose,
@@ -12,8 +12,8 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTrigger,
-} from './ui/sheet';
-import ThemeSwitch from './ui/theme-switch';
+} from '../../ui/sheet';
+import ThemeSwitch from '../../ui/theme-switch';
 
 type NavigationItem = {
   label: string;

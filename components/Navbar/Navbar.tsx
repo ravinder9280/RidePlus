@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import { Search, Car, CarFront, PlusCircle, Bell, Plus, Home, User } from 'lucide-react'
 
 import {
@@ -14,9 +14,9 @@ import {
 import { usePathname } from 'next/navigation'
 import {  UserButton, useUser } from '@clerk/nextjs'
 import { cn } from '@/lib/utils'
-import NotificationBadge from './common/NotificationBadge'
-import MobileNav from './mobile-sheet'
-import { Avatar, AvatarFallback } from './ui/avatar'
+import NotificationBadge from '../common/NotificationBadge'
+import MobileNav from './Mobile/mobile-nav'
+import { Avatar, AvatarFallback } from '../ui/avatar'
 import { useCurrentUserId } from '@/hooks/useCurrentUserId'
 const navItems = [
     { label: "Home", href: "/" },
@@ -45,7 +45,15 @@ const Navbar = () => {
         { label: "Requests", href: "/requests", icon: Bell, image: '/phone-car.png' },
         { label: "Profile", href: userId ? `/user/${userId}` : "/profile", icon: User, image: '/car-check.png' },
     ], [userId])
-    
+    const segments = pathname.split('/').filter(Boolean)
+
+    const hideHeader =
+      segments[0] === 'ride' &&
+      segments.length === 2 &&
+      segments[1] !== 'new'
+  
+    if (hideHeader) return null
+  
     return (
         <header className='fixed top-0 left-0 right-0 z-[3] transition-all duration-300 bg-dark/80  shadow-md backdrop-blur-sm'>
             <div className='w-full container mx-auto sm:px-6 md:px-12 lg:px-24 xl:px-0 px-4'>

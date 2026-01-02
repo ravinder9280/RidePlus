@@ -1,7 +1,7 @@
 import NearRides from "@/components/ride/near-rides"; // server
 import LocationInit from "@/components/location/LocationInit";  // client (asks on mount)
 import AllowLocationBanner from "@/components/common/AllowLocationBanner"; // client
-import MobileTabs from "@/components/Mobile-Tabs";
+import MobileTabs from "@/components/Tabs/Mobile-Tabs";
 import { ListSkeleton } from "@/components/common/ListSkeleton";
 import { Suspense } from "react";
 import LatestRides from "@/components/ride/latest-rides";
@@ -21,7 +21,7 @@ export default async function HomePage({
   const denied = get("loc") === "denied";
 
   return (
-    <main className=" mx-auto  space-y-6">
+    <div className=" mx-auto mt-[4rem] w-full sm:p-4 md:p-6 lg:p-8 p-2  space-y-6">
       {denied && <AllowLocationBanner />}
       <HomeCarousel/>
       <MobileTabs />
@@ -50,6 +50,6 @@ export default async function HomePage({
       </Suspense>
 
      
-    </main>
+    </div>
   );
 }

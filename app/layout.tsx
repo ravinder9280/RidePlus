@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {Outfit} from 'next/font/google'
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from '@clerk/themes'
 import { Toaster, } from 'sonner'
@@ -49,7 +49,7 @@ export default function RootLayout({
           <>
             <Toaster closeButton position="top-right" richColors={true} />
           <Navbar/>
-              <main className="mt-[4rem] w-full sm:p-4 md:p-6 lg:p-8 p-2 ">
+              <main className="">
 
               {children}
               </main>        </>

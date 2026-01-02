@@ -20,8 +20,9 @@ export interface Ride {
     estTotalFare?: number
     perSeatPrice:number
     service?: "UBER" | "OLA" | "OWNER"
-    owner?:  Owner , 
+    owner?:  Owner  
     seatsAvailable?: number
+    createdAt?:Date 
 
 
 }

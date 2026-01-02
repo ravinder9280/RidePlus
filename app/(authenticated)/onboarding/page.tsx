@@ -65,13 +65,13 @@ export default async function OnboardingPage() {
     if (onboarded) redirect('/');
 
     return (
-        <main className="mx-auto max-w-md p-6">
+        <div className="mx-auto max-w-md p-6">
             <h1 className="text-2xl font-semibold mb-2">Finish setting up your account</h1>
             <p className="text-sm text-muted-foreground mb-6">
                 We&apos;ll use your number to share contact details with accepted ride members.
             </p>
 
             <OnboardingForm saveProfile={saveProfile} />
-        </main>
+        </div>
     );
 }
