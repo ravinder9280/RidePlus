@@ -28,6 +28,7 @@ export default async function Page({ params }: PageProps) {
             seatsAvailable: true,
             id: true,
             createdAt: true,
+            seatsTotal:true,
 
 
             owner: {
@@ -97,19 +98,19 @@ export default async function Page({ params }: PageProps) {
 
             />
 
-            <div className=' space-y-8 p-2 rounded-2xl relative top-[-40px] bg-background z-40'>
+            <div className=' space-y-8 sm:p-4 md:p-6 lg:p-8 p-2 rounded-2xl relative top-[-40px] bg-background z-40'>
 
 
 
 
 
                 {/* car detail */}
-                <div className='p-2 flex items-center justify-between shadow shadow-muted rounded-lg border'>
+                <div className='p-2 flex items-center justify-between shadow mt-4 shadow-muted rounded-lg border'>
                     <div>
 
                         <h3 className='text-lg font-bold'>Toyota HR-V</h3>
                         <div>
-                            <Badge size="sm" variant="teal-subtle">Seats Available : {ride.seatsAvailable}</Badge>
+                            <Badge size="sm" variant="teal-subtle">Seats Available :<span className='tracking-wider'>{ride.seatsAvailable}/{ride.seatsTotal}</span> </Badge>
                         </div>
                     </div>
                     <div>
@@ -132,9 +133,8 @@ export default async function Page({ params }: PageProps) {
                             Trip Details
                         </h4>
                     </div>
-                    <div className=''>
-
-                        <h4 className='font-medium text-sm'>
+                    <div className="grid grid-cols-[110px_1fr] gap-x-3 gap-y-2">
+                        <h4 className='font-medium text-sm whitespace-nowrap'>
                             Pickup Point
                         </h4>
 
@@ -145,26 +145,24 @@ export default async function Page({ params }: PageProps) {
 
 
                     </div>
-                    <div className=''>
-
-                        <h4 className='font-medium text-sm'>
+                    <div className="grid grid-cols-[110px_1fr] gap-x-3 gap-y-2">
+                        <h4 className='font-medium text-sm whitespace-nowrap'>
                             Destination
                         </h4>
 
-                        <p className='text-sm line-clamp-2 text-muted-foreground'>
+                        <p className='text-sm line-clamp-2 text-muted-foreground '>
                             {ride.toText}
 
                         </p>
 
 
                     </div>
-                    <div className=''>
-
-                        <h4 className='font-medium text-sm'>
+                    <div className="grid grid-cols-[110px_1fr] gap-x-3 gap-y-2">
+                        <h4 className='font-medium text-sm whitespace-nowrap'>
                             Departure time
                         </h4>
 
-                        <p className='text-sm text-muted-foreground'>
+                        <p className='text-sm text-muted-foreground '>
                             {format(new Date(ride.departureAt), "MMMM d, yyyy , h:mm a")}
 
                         </p>

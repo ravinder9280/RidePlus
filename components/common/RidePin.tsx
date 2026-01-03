@@ -15,7 +15,7 @@ const RidePin = ({ fromText, toText, lineClampClass }: { fromText: string, toTex
                     <path d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
                 </svg>                    </div>
 
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-2">
                 <div>
                     <p className="text-xs text-muted-foreground">Pickup Point</p>
                     <p className={`text-sm   ${lineClampClass} font-medium`}>{fromText}</p>

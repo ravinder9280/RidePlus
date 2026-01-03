@@ -128,6 +128,9 @@ export function RideDialog({
 
     return (
         <div className="fixed bottom-0 left-0 w-full border-t bg-muted p-4 z-[49] shadow-lg ">
+                                {isExpired&&<Badge variant='red-subtle'>
+                        Ride Expired
+                        </Badge>}
             <div className=" flex mx-auto max-w-7xl items-center justify-between">
                 <div>
                     <p className="text-base md:text-lg font-semibold">₹{perSeatPrice}</p>
