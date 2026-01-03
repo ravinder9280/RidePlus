@@ -168,7 +168,7 @@ export default function RideMap({
         <div className="realtive">
             <div ref={mapContainerRef} className={`relative w-full h- ${heightClass} overflow-hidden`} >
 
-            <div className='absolute top-2 left-2  w-[90vw] bg-muted/80 p-2 rounded-lg'>
+            <div className='absolute top-2 left-2  w-[90vw] z-10 bg-muted/80 p-2 rounded-lg'>
                 
             <RidePin fromText={fromText || ''} toText={toText || ''} lineClampClass='line-clamp-1' />
             </div>
