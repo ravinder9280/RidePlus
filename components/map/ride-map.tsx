@@ -7,8 +7,6 @@ import RidePin from '../common/RidePin';
 
 
 
-
-
 type Coord = { lng: number; lat: number };
 
 type Props = {

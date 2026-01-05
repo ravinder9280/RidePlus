@@ -98,7 +98,7 @@ export default async function Page({ params }: PageProps) {
 
             />
 
-            <div className='space-y-8 sm:p-4 md:p-6 lg:p-8 rounded-2xl relative top-[-40px] bg-background z-40'>
+            <div className='space-y-8 p-3 sm:p-4 md:p-6 lg:p-8 rounded-2xl relative top-[-40px] bg-background z-40'>
 
 
 
