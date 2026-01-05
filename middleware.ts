@@ -9,7 +9,8 @@ const isPublicRoute = createRouteMatcher([
     '/api/healthz(.*)',       // optional health check
     "/api/rides/search(.*)",     // <-- make search public
     "/api/cron/cleanup",     // <-- make search public
-    "/api/chat"
+    "/api/chat",
+    "/api/cron/(.*)"  ///make vercel cron job public
 ]);
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding(.*)']);
@@ -18,7 +19,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     // Skip protection for public routes
     if (isPublicRoute(req)) return;
     // Protect everything else
-    const {  sessionClaims ,isAuthenticated,redirectToSignIn} = await auth();
+    const { sessionClaims, isAuthenticated, redirectToSignIn } = await auth();
     if (isAuthenticated && isOnboardingRoute(req)) {
         return NextResponse.next()
     }
@@ -31,7 +32,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
 
     if (isAuthenticated && !isPublicRoute(req)) return NextResponse.next()
 
-    
+
 });
 
 export const config = {

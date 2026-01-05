@@ -29,18 +29,16 @@ export default function RideMap({
     heightClass = 'h-96',
     fromText,
     toText,
-    
-   
 }: Props) {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const mapRef = useRef<mapboxgl.Map | null>(null);
     const fromMarkerRef = useRef<mapboxgl.Marker | null>(null);
     const toMarkerRef = useRef<mapboxgl.Marker | null>(null);
 
-   
+
 
     // Check expiry once on mount/when startsAt changes
- 
+
 
     const fetchRouteAndDisplay = async () => {
         if (!mapRef.current) return;
@@ -104,10 +102,12 @@ export default function RideMap({
             fromMarkerRef.current.setLngLat([from.lng, from.lat]);
         }
 
+
         // fit bounds
         const bounds = new mapboxgl.LngLatBounds();
         routeData.geometry.coordinates.forEach((c: [number, number]) => bounds.extend(c));
         mapRef.current.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 600 });
+
     };
 
     // init map
@@ -159,23 +159,23 @@ export default function RideMap({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [from.lng, from.lat, to.lng, to.lat]);
 
-  
 
-   
-   
+
+
+
 
     return (
         <div className="realtive">
             <div ref={mapContainerRef} className={`relative w-full h- ${heightClass} overflow-hidden`} >
 
-            <div className='absolute top-2 left-2  w-[90vw] z-10 bg-muted/80 p-2 rounded-lg'>
-                
-            <RidePin fromText={fromText || ''} toText={toText || ''} lineClampClass='line-clamp-1' />
-            </div>
+                <div className='absolute top-2 left-2  w-[90vw] z-10 bg-muted/80 p-2 rounded-lg'>
+
+                    <RidePin fromText={fromText || ''} toText={toText || ''} lineClampClass='line-clamp-1' />
+                </div>
             </div>
 
-           
 
-            </div>
+
+        </div>
     );
 }
