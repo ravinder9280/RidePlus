@@ -26,7 +26,7 @@ const RideUserCard = ({ ride, memberStatus }: RideUserCard) => {
                 <div className='relative flex items-center justify-center font-medium'>
                     <Image src={ride.owner?.imageUrl || ''} className='rounded-lg' alt='' height={50} width={50} />
                     <div className='px-1 flex gap-1 shadow-md items-center bg-background text-sm rounded-md absolute bottom-[-13px]'>
-                        {ride.owner?.rating?.toFixed(1) || 0} <Star fill='yellow' size={14} />
+                        {ride.owner?.rating?.toFixed(1) || 0} <Image  height={14} width={14} src={'/star.png'} alt='' />
 
                     </div>
                 </div>

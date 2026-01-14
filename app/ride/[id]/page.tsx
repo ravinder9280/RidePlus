@@ -9,6 +9,7 @@ import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import Image from 'next/image'
 import RideUserCard from './components/RideUserCard'
+import { Timer } from 'lucide-react'
 
 type PageProps = { params: { id: string } }
 
@@ -122,6 +123,33 @@ export default async function Page({ params }: PageProps) {
 
                 {/* user pfp */}
                 <RideUserCard memberStatus={memberStatus} ride={ride} />
+
+                <div className='p-4 border grid grid-cols-2 rounded'> 
+                    
+                    <div className='flex items-center'>
+                        <Timer/>
+                        <div className='ml-2'>
+                            <p className='font-bold'>
+                                410 Hr
+
+                            </p>
+                            <span className='text-sm text-muted-foreground'>Time taken</span>
+                        </div>
+
+                    </div>
+                    <div className='flex items-center'>
+                        <Timer/>
+                        <div className='ml-2'>
+                            <p className='font-bold'>
+                                410 Hr
+
+                            </p>
+                            <span className='text-sm text-muted-foreground'>Time taken</span>
+                        </div>
+
+                    </div>
+
+                </div>
 
 
 
