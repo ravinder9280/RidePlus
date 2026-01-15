@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
-
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
@@ -13,32 +12,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing prompt or messages' }, { status: 400 });
     }
 
-    const openrouter = createOpenRouter({
-      apiKey: process.env.OPENROUTER_API_KEY,
-    });
+    const google = createGoogleGenerativeAI({
 
-    // Prefer messages if provided, otherwise use prompt
+      apiKey: process.env.GOOGLE_GEMINI_API_KEY,
+
+
+    });
     const requestMessages =
       messages && messages.length
         ? messages
         : [{ role: 'user' as const, content: String(prompt ?? '') }];
-        console.log(messages)
 
     const { text } = await generateText({
-      model: openrouter('openai/gpt-oss-20b:free'),
+      model: google('gemini-2.5-flash'),
       messages: requestMessages,
 
-      
-      
+
+
     });
     if (!text || !text.trim()) {
       return NextResponse.json({ error: 'Text Generation Error' }, { status: 502 });
-     
+
     }
 
     return NextResponse.json({ text });
   } catch (err) {
-    console.error('AI chat route error:', err);
+    console.error('AI chat route error:', err instanceof Error ? err.message : "some error occured");
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

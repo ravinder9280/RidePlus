@@ -14,6 +14,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.8",
     "@clerk/nextjs": "^6.31.2",
     "@clerk/themes": "^2.4.11",
     "@google/generative-ai": "^0.24.1",
@@ -49,7 +50,7 @@
     "@upstash/ratelimit": "^2.0.6",
     "@upstash/redis": "^1.35.6",
     "@vis.gl/react-google-maps": "^1.5.5",
-    "ai": "^5.0.68",
+    "ai": "^6.0.35",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

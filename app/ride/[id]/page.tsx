@@ -99,7 +99,7 @@ export default async function Page({ params }: PageProps) {
 
             />
 
-            <div className='space-y-8 p-3 sm:p-4 md:p-6 lg:p-8 rounded-2xl relative top-[-40px] bg-background z-40'>
+            <div className='space-y-6 p-3 sm:p-4 md:p-6 lg:p-8 rounded-2xl relative top-[-40px] bg-background z-40'>
 
 
 
@@ -130,21 +130,21 @@ export default async function Page({ params }: PageProps) {
                         <Timer/>
                         <div className='ml-2'>
                             <p className='font-bold'>
-                                410 Hr
+                                4 Hr
 
                             </p>
-                            <span className='text-sm text-muted-foreground'>Time taken</span>
+                            <span className='text-sm text-muted-foreground'>Time</span>
                         </div>
 
                     </div>
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-center'>
                         <Timer/>
                         <div className='ml-2'>
                             <p className='font-bold'>
-                                410 Hr
+                                267 km
 
                             </p>
-                            <span className='text-sm text-muted-foreground'>Time taken</span>
+                            <span className='text-sm text-muted-foreground'>Distance</span>
                         </div>
 
                     </div>
