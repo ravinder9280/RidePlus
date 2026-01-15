@@ -10,6 +10,7 @@ import { Markdown } from './Markdown';
 import { toast } from 'sonner';
 import { useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useTypewriter } from '@/hooks/typewriterHook';
 type ChatMessage = { type: 'user' | 'ai'; text: string };
 
 
@@ -38,49 +39,22 @@ Only talk about RidePlus and ride sharing. If user asks unrelated things, briefl
 answer and gently bring the topic back to RidePlus.
 `;
 
-/* ---------- Typewriter hook + component ---------- */
 
-const useTypewriter = (text: string, speed = 15) => {
-  const [displayed, setDisplayed] = useState('');
-
-  useEffect(() => {
-    if (!text) {
-      setDisplayed('');
-      return;
-    }
-
-    setDisplayed('');
-    let i = 0;
-
-    const interval = setInterval(() => {
-      setDisplayed((prev) => prev + text[i]);
-      i += 1;
-      if (i >= text.length) {
-        clearInterval(interval);
-      }
-    }, speed);
-
-    return () => clearInterval(interval);
-  }, [text, speed]);
-
-  return displayed;
-};
 
 const TypewriterMarkdown: React.FC<{
   text: string;
   scrollAnchorRef: React.RefObject<HTMLDivElement>;
-}> = ({ text, scrollAnchorRef }) => {
-  const animated = useTypewriter(text, 1);
+}> = ({ text }) => {
+  const { displayed } = useTypewriter(text, 1);
 
   // keep scrolling down while typing
-  useEffect(() => {
-    scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [animated, scrollAnchorRef]);
+  // useEffect(() => {
+  //   scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // }, [animated, scrollAnchorRef]);
 
-  return <Markdown>{animated}</Markdown>;
+  return <Markdown>{displayed}</Markdown>;
 };
 
-/* ---------- Main Chat Button Component ---------- */
 
 const ChatDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,7 +63,7 @@ const ChatDialog = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const {user}=useUser()
+  const { user } = useUser()
 
   const suggestedQuestions = [
     'How does RidePlus work?',
@@ -102,7 +76,6 @@ const ChatDialog = () => {
     'Does RidePlus provide ride history or receipts?',
   ];
 
-  /* ---------- Auto scroll to bottom when new messages ---------- */
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -112,9 +85,8 @@ const ChatDialog = () => {
     if (isSheetOpen) {
       scrollToBottom();
     }
-  }, [messages, sending, isSheetOpen]);
+  }, [messages, sending, isSheetOpen, isOpen]);
 
-  /* ---------- Shared send helper ---------- */
 
   const sendMessageToAI = async (rawQuestion: string, opts?: { openSheet?: boolean }) => {
     const q = rawQuestion.trim();
@@ -151,8 +123,7 @@ const ChatDialog = () => {
       });
 
       if (!res.ok) {
-        // try to parse backend error
-       
+
         throw new Error("Some Error Occured");
       }
 
@@ -162,7 +133,7 @@ const ChatDialog = () => {
       setMessages((prev) => [...prev, { type: 'ai', text: aiText }]);
     } catch (err: unknown) {
       console.error(err);
-      
+
       toast.error("Some Error Occured");
 
       setMessages((prev) => [
@@ -177,13 +148,11 @@ const ChatDialog = () => {
     }
   };
 
-  /* ---------- Handlers ---------- */
 
   const handleSuggestedClick = (suggested: string) => {
     setIsOpen(false);
     setIsSheetOpen(true);
     setQuestion('');
-    // fire and forget
     void sendMessageToAI(suggested, { openSheet: false });
   };
 
@@ -202,12 +171,10 @@ const ChatDialog = () => {
     }
   };
 
-  /* ---------- JSX ---------- */
 
   return (
     <>
       <div className="fixed bottom-5 md:bottom-20 right-4 z-[48]">
-        {/* Chat Button */}
         {!isOpen && !isSheetOpen && (
           <button
             onClick={() => setIsOpen(true)}
@@ -217,10 +184,8 @@ const ChatDialog = () => {
           </button>
         )}
 
-        {/* Small Popup with Suggestions */}
         {isOpen && !isSheetOpen && (
           <div className="rounded-lg shadow-xl animate-in slide-in-from-bottom-2 duration-200 w-80 md:w-96 max-h-[500px] flex flex-col">
-            {/* Header */}
             <div className="bg-primary p-4 text-primary-foreground rounded-t-lg flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5" />
@@ -238,7 +203,6 @@ const ChatDialog = () => {
               </Button>
             </div>
 
-            {/* Suggestions Content */}
             <div className="flex-1 rounded-b-lg space-y-4 bg-background p-4">
               <div className="flex flex-wrap gap-2">
                 {suggestedQuestions.map((q, index) => (
@@ -278,7 +242,6 @@ const ChatDialog = () => {
         )}
       </div>
 
-      {/* Full Screen Sheet for Chat */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent
           side="right"
@@ -299,17 +262,14 @@ const ChatDialog = () => {
             </Button>
           </div>
 
-          {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-6">
             {messages.map((msg, index) => {
               const isLastMessage = index === messages.length - 1;
 
               return (
                 <div key={index} className="flex gap-2 items-end">
-                  {/* AI message branch */}
                   {msg.type === 'ai' && (
                     <div className="space-y-3">
-                      {/* AI avatar + name */}
                       <div className="flex items-center text-muted-foreground font-semibold gap-2">
                         <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center flex-shrink-0">
                           <Sparkles className="w-4 h-4" />
@@ -317,7 +277,6 @@ const ChatDialog = () => {
                         <span>RidePlus AI</span>
                       </div>
 
-                      {/* AI bubble */}
                       <div
                         className="
                           border shadow-sm  p-3 border-none
@@ -338,10 +297,8 @@ const ChatDialog = () => {
                     </div>
                   )}
 
-                  {/* User message branch */}
                   {msg.type === 'user' && (
                     <>
-                      {/* User bubble */}
                       <div
                         className="
                           border shadow-sm max-w-[80%] p-3 border-none rounded-none
@@ -353,26 +310,25 @@ const ChatDialog = () => {
                         <span>{msg.text}</span>
                       </div>
 
-                      {/* User avatar */}
                       <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                       {user?<Avatar className="h-8 w-8 rounded-full " >
+                        {user ? <Avatar className="h-8 w-8 rounded-full " >
 
-                                <AvatarImage src={user?.imageUrl || undefined} />
-                                <AvatarFallback>{user?.fullName ?? "U"}</AvatarFallback>
-                        </Avatar>:
+                          <AvatarImage src={user?.imageUrl || undefined} />
+                          <AvatarFallback>{user?.fullName ?? "U"}</AvatarFallback>
+                        </Avatar> :
 
-                         <svg
-                         className="w-5 h-5 text-gray-600"
-                         fill="currentColor"
-                         viewBox="0 0 20 20"
-                         >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                            clipRule="evenodd"
+                          <svg
+                            className="w-5 h-5 text-gray-600"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                              clipRule="evenodd"
                             />
-                        </svg>
-                          }
+                          </svg>
+                        }
                       </div>
                     </>
                   )}
@@ -397,7 +353,6 @@ const ChatDialog = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area in Sheet */}
           <div className="p-4 bg-muted/60 rounded-t-2xl shadow-2xl">
             <div className="flex items-end gap-2">
               <div className="flex-1 flex items-center pl-2 gap-2 px-2 rounded-xl h-10 border border-muted-foreground relative">
