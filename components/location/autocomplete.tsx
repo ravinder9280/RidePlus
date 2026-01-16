@@ -10,7 +10,7 @@ import {
   CommandInput,
 } from "@/components/ui/command";
 import { Input } from "../ui/input";
-import { ChevronRight} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Spinner } from "../ui/spinner";
 
@@ -30,7 +30,7 @@ export type Props = {
 export type Suggestion = {
   id: string;
   text: string;
-  label:string;
+  label: string;
   lat: number;
   lng: number;
 };
@@ -78,19 +78,25 @@ export default function MapboxAutocomplete({
         url.searchParams.set("types", types);
         const countries = Array.isArray(country) ? country.join(",") : country;
         if (countries) url.searchParams.set("country", countries);
-        if (proximity) url.searchParams.set("proximity", `${proximity.lng},${proximity.lat}`);
+        if (proximity)
+          url.searchParams.set(
+            "proximity",
+            `${proximity.lng},${proximity.lat}`,
+          );
 
         const res = await fetch(url.toString(), { signal: ac.signal });
         if (!res.ok) throw new Error(`Mapbox ${res.status}`);
         const data = await res.json();
 
-        const suggestions: Suggestion[] = (data.features ?? []).map((f: any) => ({
-          id: f.id,
-          label:f.text,
-          text: f.place_name as string,
-          lng: Number(f.center?.[0]),
-          lat: Number(f.center?.[1]),
-        }));
+        const suggestions: Suggestion[] = (data.features ?? []).map(
+          (f: any) => ({
+            id: f.id,
+            label: f.text,
+            text: f.place_name as string,
+            lng: Number(f.center?.[0]),
+            lat: Number(f.center?.[1]),
+          }),
+        );
 
         setItems(suggestions);
       } catch {
@@ -101,7 +107,6 @@ export default function MapboxAutocomplete({
     }, 250);
 
     return () => clearTimeout(t);
-     
   }, [query, TOKEN, limit, types, country, proximity, canSearch]);
 
   const choose = (s: Suggestion) => {
@@ -128,7 +133,7 @@ export default function MapboxAutocomplete({
         />
         {showList && (
           <CommandList className="max-h-screen">
-            {loading &&query.length>0&& (
+            {loading && query.length > 0 && (
               <div className="py-3 text-sm text-muted-foreground w-full flex items-center justify-center text-center">
                 <Spinner />
               </div>
@@ -141,21 +146,22 @@ export default function MapboxAutocomplete({
                 </CommandEmpty>
 
                 {items.length > 0 && (
-                  <CommandGroup  >
+                  <CommandGroup>
                     {items.map((s) => (
-                      <CommandItem className="py-4 text-muted-foreground" key={s.id} value={s.text} onSelect={() => choose(s)} asChild>
-                       
+                      <CommandItem
+                        className="py-4 text-muted-foreground"
+                        key={s.id}
+                        value={s.text}
+                        onSelect={() => choose(s)}
+                        asChild
+                      >
                         <div className="flex items-center gap-2 justify-between text-wrap">
                           <div className="flex-1">
-                            <h3 className="font-semibold pb-1">
-                              {s.label}
-                            </h3>
+                            <h3 className="font-semibold pb-1">{s.label}</h3>
 
-                          <p className="line-clamp-1">
-                          {s.text}
-                          </p>
+                            <p className="line-clamp-1">{s.text}</p>
                           </div>
-                          <ChevronRight/>
+                          <ChevronRight />
                         </div>
                       </CommandItem>
                     ))}
@@ -168,10 +174,25 @@ export default function MapboxAutocomplete({
       </Command>
 
       {/* Hidden fields posted with the form */}
-      <Input type="hidden" name={`${namePrefix}Text`} value={query} readOnly required={required} />
-      <Input type="hidden" name={`${namePrefix}Lat`} value={picked?.lat ?? ""} readOnly />
-      <Input type="hidden" name={`${namePrefix}Lng`} value={picked?.lng ?? ""} readOnly />
-
+      <Input
+        type="hidden"
+        name={`${namePrefix}Text`}
+        value={query}
+        readOnly
+        required={required}
+      />
+      <Input
+        type="hidden"
+        name={`${namePrefix}Lat`}
+        value={picked?.lat ?? ""}
+        readOnly
+      />
+      <Input
+        type="hidden"
+        name={`${namePrefix}Lng`}
+        value={picked?.lng ?? ""}
+        readOnly
+      />
     </div>
   );
 }

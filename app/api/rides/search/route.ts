@@ -1,14 +1,14 @@
-import type { Prisma } from '@prisma/client';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
+import type { Prisma } from "@prisma/client";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { z } from "zod";
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from "@/lib/prisma";
 
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 
 const optionalNumber = z
-  .preprocess((v) => (v === '' || v == null ? undefined : v), z.coerce.number())
+  .preprocess((v) => (v === "" || v == null ? undefined : v), z.coerce.number())
   .optional();
 
 const qSchema = z.object({
@@ -17,11 +17,11 @@ const qSchema = z.object({
   toLat: optionalNumber,
   toLng: optionalNumber,
   date: z.string().optional(),
-  window: z.enum(['any', 'morning', 'afternoon', 'evening']).default('any'),
+  window: z.enum(["any", "morning", "afternoon", "evening"]).default("any"),
   seats: z.coerce.number().int().min(1).default(1),
-  service: z.enum(['UBER', 'OLA']).optional(),
+  service: z.enum(["UBER", "OLA"]).optional(),
   verifiedOnly: z.coerce.boolean().optional(),
-  sort: z.enum(['time', 'price', 'distance', 'created']).default('created'),
+  sort: z.enum(["time", "price", "distance", "created"]).default("created"),
   radiusKm: z.coerce.number().min(1).max(100).default(10),
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(50).default(50),
@@ -29,21 +29,21 @@ const qSchema = z.object({
 
 function windowBounds(
   date?: string,
-  win?: 'any' | 'morning' | 'afternoon' | 'evening',
+  win?: "any" | "morning" | "afternoon" | "evening",
 ) {
-  if (!date || win === 'any') return {};
+  if (!date || win === "any") return {};
   const base = new Date(`${date}T00:00:00Z`);
   const start = new Date(base);
   const end = new Date(base);
-  if (win === 'morning') {
+  if (win === "morning") {
     start.setUTCHours(5);
     end.setUTCHours(11, 59, 59, 999);
   }
-  if (win === 'afternoon') {
+  if (win === "afternoon") {
     start.setUTCHours(12);
     end.setUTCHours(16, 59, 59, 999);
   }
-  if (win === 'evening') {
+  if (win === "evening") {
     start.setUTCHours(17);
     end.setUTCHours(22, 59, 59, 999);
   }
@@ -84,7 +84,7 @@ export async function GET(req: NextRequest) {
       {
         ok: false,
         error: parsed.error.flatten(),
-        message: 'Location Parsing Failed',
+        message: "Location Parsing Failed",
       },
       { status: 400 },
     );
@@ -107,7 +107,7 @@ export async function GET(req: NextRequest) {
     } = parsed.data;
 
     const where: Prisma.ridesWhereInput = {
-      status: 'ACTIVE',
+      status: "ACTIVE",
       seatsAvailable: { gte: seats },
     };
 
@@ -146,12 +146,12 @@ export async function GET(req: NextRequest) {
 
     // default DB ordering of
     let orderBy: Prisma.ridesOrderByWithRelationInput[] = [
-      { createdAt: 'desc' },
+      { createdAt: "desc" },
     ];
-    if (sort === 'price')
-      orderBy = [{ perSeatPrice: 'asc' }, { departureAt: 'asc' }];
-    if (sort === 'time') orderBy = [{ departureAt: 'asc' }];
-    if (sort === 'created') orderBy = [{ createdAt: 'desc' }];
+    if (sort === "price")
+      orderBy = [{ perSeatPrice: "asc" }, { departureAt: "asc" }];
+    if (sort === "time") orderBy = [{ departureAt: "asc" }];
+    if (sort === "created") orderBy = [{ createdAt: "desc" }];
 
     const skip = (page - 1) * pageSize;
 
@@ -183,7 +183,7 @@ export async function GET(req: NextRequest) {
       // precise radius filter (inside requested km)
       items = items.filter((r) => r.distanceKm <= radiusKm + 0.001);
 
-      if (sort === 'distance') {
+      if (sort === "distance") {
         items.sort(
           (a, b) =>
             a.distanceKm - b.distanceKm ||
@@ -198,7 +198,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      message: 'Successfully Fetched',
+      message: "Successfully Fetched",
       items,
       total,
       page,
@@ -209,7 +209,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         ok: false,
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },
     );

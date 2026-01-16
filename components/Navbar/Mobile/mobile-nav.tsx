@@ -1,10 +1,10 @@
-import { CarFront, ChevronRight, Menu, X } from 'lucide-react';
-import Link from 'next/link';
-import type { ElementType } from 'react';
+import { CarFront, ChevronRight, Menu, X } from "lucide-react";
+import Link from "next/link";
+import type { ElementType } from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
-import UserMobileActions from '../../auth/UserMobileActions';
+import MobileBottomSheet from "./mobile-bottom-sheet";
 import {
   Sheet,
   SheetClose,
@@ -12,8 +12,8 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTrigger,
-} from '../../ui/sheet';
-import ThemeSwitch from '../../ui/theme-switch';
+} from "../../ui/sheet";
+import ThemeSwitch from "../../ui/theme-switch";
 
 type NavigationItem = {
   label: string;
@@ -60,10 +60,10 @@ const MobileNav = ({ navigationItems, pathname }: MobileNavProps) => (
                 <SheetClose asChild>
                   <Link
                     href={item.href}
-                    aria-current={isActive ? 'page' : undefined}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      'flex items-center justify-between rounded-md py-2 pl-1 font-normal hover:bg-muted/40',
-                      isActive ? 'text-primary' : 'text-muted-foreground',
+                      "flex items-center justify-between rounded-md py-2 pl-1 font-normal hover:bg-muted/40",
+                      isActive ? "text-primary" : "text-muted-foreground",
                     )}
                   >
                     <div className="flex items-center gap-4">
@@ -88,7 +88,7 @@ const MobileNav = ({ navigationItems, pathname }: MobileNavProps) => (
       <SheetFooter>
         <div className="flex w-full items-center justify-between border-t px-4 py-2">
           <div className="flex w-full items-center justify-start">
-            <UserMobileActions />
+            <MobileBottomSheet />
           </div>
           <div>
             <ThemeSwitch />

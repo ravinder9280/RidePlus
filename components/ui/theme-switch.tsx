@@ -32,7 +32,7 @@ const ThemeSwitch = ({
       className={cn(
         "relative flex items-center justify-center", // center the whole control
         "h-9 w-20", // track sized to hug the icons
-        className
+        className,
       )}
       {...props}
     >
@@ -48,7 +48,7 @@ const ThemeSwitch = ({
           "[&>span]:h-7 [&>span]:w-7 [&>span]:rounded-full [&>span]:bg-background [&>span]:shadow [&>span]:z-10",
           // override default translate distances so the thumb moves across 20px track padding + icon spacing
           "data-[state=unchecked]:[&>span]:translate-x-1",
-          "data-[state=checked]:[&>span]:translate-x-[44px]" // 44 ≈ w-20(80) - padding - thumb(28)
+          "data-[state=checked]:[&>span]:translate-x-[44px]", // 44 ≈ w-20(80) - padding - thumb(28)
         )}
       />
 
@@ -56,14 +56,14 @@ const ThemeSwitch = ({
       <span
         className={cn(
           "pointer-events-none absolute left-2 inset-y-0 z-0",
-          "flex items-center justify-center"
+          "flex items-center justify-center",
         )}
       >
         <SunIcon
           size={16}
           className={cn(
             "transition-all duration-200 ease-out",
-            checked ? "text-muted-foreground/70" : "text-foreground scale-110"
+            checked ? "text-muted-foreground/70" : "text-foreground scale-110",
           )}
         />
       </span>
@@ -71,14 +71,14 @@ const ThemeSwitch = ({
       <span
         className={cn(
           "pointer-events-none absolute right-2 inset-y-0 z-0",
-          "flex items-center justify-center"
+          "flex items-center justify-center",
         )}
       >
         <MoonIcon
           size={16}
           className={cn(
             "transition-all duration-200 ease-out",
-            checked ? "text-foreground scale-110" : "text-muted-foreground/70"
+            checked ? "text-foreground scale-110" : "text-muted-foreground/70",
           )}
         />
       </span>

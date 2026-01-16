@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { Ride } from '@/lib/types/Ride';
+import type { Ride } from "@/lib/types/Ride";
 
-import ClearFiltersButton from '../common/ClearFiltersButton';
-import { ListSkeleton } from '../common/ListSkeleton';
-import { Spinner } from '../ui/spinner';
-import RideCard from './ride-card';
+import ClearFiltersButton from "../common/ClearFiltersButton";
+import { ListSkeleton } from "../common/ListSkeleton";
+import { Spinner } from "../ui/spinner";
+import RideCard from "./ride-card";
 
 const PAGE_SIZE = 9;
 
@@ -20,8 +20,8 @@ function buildQuery(baseParams: SearchParams, page: number, pageSize: number) {
       qs.set(key, Array.isArray(value) ? value[0] : value);
     }
   });
-  qs.set('page', String(page));
-  qs.set('pageSize', String(pageSize));
+  qs.set("page", String(page));
+  qs.set("pageSize", String(pageSize));
   return qs.toString();
 }
 
@@ -33,19 +33,19 @@ function hasAnyFilters(searchParams: SearchParams) {
 
   return (
     Boolean(
-      get('fromLat') ||
-        get('fromLng') ||
-        get('toLat') ||
-        get('toLng') ||
-        get('fromText') ||
-        get('toText') ||
-        get('date') ||
-        get('service') ||
-        get('verifiedOnly') ||
-        get('sort'),
+      get("fromLat") ||
+      get("fromLng") ||
+      get("toLat") ||
+      get("toLng") ||
+      get("fromText") ||
+      get("toText") ||
+      get("date") ||
+      get("service") ||
+      get("verifiedOnly") ||
+      get("sort"),
     ) ||
-    Boolean(get('window') && get('window') !== 'any') ||
-    Boolean(get('seats') && get('seats') !== '1')
+    Boolean(get("window") && get("window") !== "any") ||
+    Boolean(get("seats") && get("seats") !== "1")
   );
 }
 
@@ -84,7 +84,7 @@ export default function RideList({
         setIsLoadingMore(true);
       }
 
-      const res = await fetch(url, { cache: 'no-store' });
+      const res = await fetch(url, { cache: "no-store" });
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
@@ -105,7 +105,7 @@ export default function RideList({
       };
 
       if (!response.ok) {
-        setError(response.message || 'Failed to fetch rides');
+        setError(response.message || "Failed to fetch rides");
         setHasMore(false);
         return;
       }
@@ -121,7 +121,7 @@ export default function RideList({
         setHasMore(newItems.length === PAGE_SIZE);
       }
     } catch {
-      setError('Network error. Please check your connection and try again.');
+      setError("Network error. Please check your connection and try again.");
       setHasMore(false);
     } finally {
       setIsInitialLoading(false);
@@ -153,7 +153,7 @@ export default function RideList({
       },
       {
         root: null,
-        rootMargin: '200px',
+        rootMargin: "200px",
         threshold: 0.1,
       },
     );
@@ -196,7 +196,7 @@ export default function RideList({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <h3 className="font-medium">
-            {hasFilters ? 'Search results' : 'Available rides'}
+            {hasFilters ? "Search results" : "Available rides"}
           </h3>
           {hasFilters && <ClearFiltersButton basePath="/rides" />}
         </div>
@@ -226,7 +226,7 @@ export default function RideList({
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <h3 className="font-medium">
-          {hasFilters ? `Search results (${items.length})` : 'Latest rides'}
+          {hasFilters ? `Search results (${items.length})` : "Latest rides"}
         </h3>
         {hasFilters && <ClearFiltersButton basePath="/rides" />}
       </div>

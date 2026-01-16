@@ -18,8 +18,8 @@ type ConfirmationAlertDialogWrapperProps = {
   children: ReactNode;
   triggerVariant?: ButtonProps["variant"];
   triggerClassName?: string;
-  Description?:string
-  title?:string
+  Description?: string;
+  title?: string;
 };
 
 export function ConfirmationAlertDialogWrapper({
@@ -28,13 +28,17 @@ export function ConfirmationAlertDialogWrapper({
   triggerVariant = "outline",
   triggerClassName,
   Description,
-  title="Confirm Changes"
+  title = "Confirm Changes",
 }: ConfirmationAlertDialogWrapperProps) {
   return (
     <div className="flex gap-2">
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button size={"sm"} className={triggerClassName} variant={triggerVariant}>
+          <Button
+            size={"sm"}
+            className={triggerClassName}
+            variant={triggerVariant}
+          >
             {btnLabel}
           </Button>
         </AlertDialogTrigger>
