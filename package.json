@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
+    "format": " npx prettier . --write",
     "check-types": "tsc --noEmit --pretty",
     "postinstall": "npx prisma generate",
     "prepare": "husky"
@@ -94,6 +94,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "husky": "^9.1.7",
     "postcss": "^8",
+    "prettier": "3.8.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "typescript-eslint": "^8.47.0"

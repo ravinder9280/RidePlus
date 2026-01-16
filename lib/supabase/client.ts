@@ -1,5 +1,5 @@
-import { Database } from '@/database.types';
-import { createClient } from '@supabase/supabase-js';
+import { Database } from "@/database.types";
+import { createClient } from "@supabase/supabase-js";
 
 export function supabaseClient(getToken: any) {
   return createClient<Database>(
@@ -9,12 +9,12 @@ export function supabaseClient(getToken: any) {
       global: {
         fetch: async (url, options = {}) => {
           const clerkToken = await getToken({
-            template: 'supabase',
+            template: "supabase",
           });
 
           const headers = new Headers(options?.headers);
-          headers.set('Authorization', `Bearer ${clerkToken}`);
-       return fetch(url, {
+          headers.set("Authorization", `Bearer ${clerkToken}`);
+          return fetch(url, {
             ...options,
             headers,
           });

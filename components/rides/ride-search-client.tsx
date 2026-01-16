@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { Search } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { Search } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
-import LocationDialogInput from '../common/LocationDialogInput';
-import { Spinner } from '../ui/spinner';
+import LocationDialogInput from "../common/LocationDialogInput";
+import { Spinner } from "../ui/spinner";
 
 type RideSearchClientProps = {
   initialQuery: Record<string, any>;
@@ -30,9 +30,9 @@ export default function RideSearchClient({
   const sp = useSearchParams();
   const [pending, startTransition] = useTransition();
 
-  const [date, setDate] = useState<string>((sp.get('date') ?? '') as string);
-  const [windowV, setWindowV] = useState<string>(sp.get('window') ?? 'any');
-  const [seats, setSeats] = useState<string>(sp.get('seats') ?? '1');
+  const [date, setDate] = useState<string>((sp.get("date") ?? "") as string);
+  const [windowV, setWindowV] = useState<string>(sp.get("window") ?? "any");
+  const [seats, setSeats] = useState<string>(sp.get("seats") ?? "1");
 
   function submit() {
     const params = new URLSearchParams();
@@ -40,31 +40,31 @@ export default function RideSearchClient({
     const get = (n: string) =>
       (
         document.querySelector<HTMLInputElement>(`input[name="${n}"]`)?.value ??
-        ''
+        ""
       ).trim();
 
-    const fromText = get('fromText');
-    const fromLat = get('fromLat');
-    const fromLng = get('fromLng');
-    const toText = get('toText');
-    const toLat = get('toLat');
-    const toLng = get('toLng');
+    const fromText = get("fromText");
+    const fromLat = get("fromLat");
+    const fromLng = get("fromLng");
+    const toText = get("toText");
+    const toLat = get("toLat");
+    const toLng = get("toLng");
 
     const setIf = (k: string, v?: string) => {
-      if (v && v !== '') params.set(k, v);
+      if (v && v !== "") params.set(k, v);
     };
 
-    setIf('fromText', fromText);
-    setIf('fromLat', fromLat);
-    setIf('fromLng', fromLng);
-    setIf('toText', toText);
-    setIf('toLat', toLat);
-    setIf('toLng', toLng);
+    setIf("fromText", fromText);
+    setIf("fromLat", fromLat);
+    setIf("fromLng", fromLng);
+    setIf("toText", toText);
+    setIf("toLat", toLat);
+    setIf("toLng", toLng);
 
-    if (date) params.set('date', date);
-    params.set('window', windowV || 'any');
-    params.set('seats', seats || '1');
-    params.set('page', '1');
+    if (date) params.set("date", date);
+    params.set("window", windowV || "any");
+    params.set("seats", seats || "1");
+    params.set("page", "1");
 
     startTransition(() => {
       router.replace(`/rides?${params.toString()}`);

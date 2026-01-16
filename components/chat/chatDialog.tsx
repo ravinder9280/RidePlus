@@ -1,18 +1,17 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, Sparkles } from 'lucide-react';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { Spinner } from '../ui/spinner';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Markdown } from './Markdown';
-import { toast } from 'sonner';
-import { useUser } from '@clerk/nextjs';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useTypewriter } from '@/hooks/typewriterHook';
-type ChatMessage = { type: 'user' | 'ai'; text: string };
-
+import React, { useState, useRef, useEffect } from "react";
+import { X, Send, Sparkles } from "lucide-react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Spinner } from "../ui/spinner";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Markdown } from "./Markdown";
+import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useTypewriter } from "@/hooks/typewriterHook";
+type ChatMessage = { type: "user" | "ai"; text: string };
 
 const SYSTEM_PROMPT = `
 You are RidePlus AI, an expert assistant for the RidePlus ride sharing platform
@@ -39,8 +38,6 @@ Only talk about RidePlus and ride sharing. If user asks unrelated things, briefl
 answer and gently bring the topic back to RidePlus.
 `;
 
-
-
 const TypewriterMarkdown: React.FC<{
   text: string;
   scrollAnchorRef: React.RefObject<HTMLDivElement>;
@@ -55,30 +52,28 @@ const TypewriterMarkdown: React.FC<{
   return <Markdown>{displayed}</Markdown>;
 };
 
-
 const ChatDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [question, setQuestion] = useState('');
+  const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { user } = useUser()
+  const { user } = useUser();
 
   const suggestedQuestions = [
-    'How does RidePlus work?',
-    'Is RidePlus available in my city?',
-    'How can I book a RidePlus ride?',
-    'What are the fares for RidePlus?',
-    'How do I contact RidePlus customer support?',
-    'What payment options are available on RidePlus?',
-    'Are RidePlus rides safe for solo travelers?',
-    'Does RidePlus provide ride history or receipts?',
+    "How does RidePlus work?",
+    "Is RidePlus available in my city?",
+    "How can I book a RidePlus ride?",
+    "What are the fares for RidePlus?",
+    "How do I contact RidePlus customer support?",
+    "What payment options are available on RidePlus?",
+    "Are RidePlus rides safe for solo travelers?",
+    "Does RidePlus provide ride history or receipts?",
   ];
 
-
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -87,8 +82,10 @@ const ChatDialog = () => {
     }
   }, [messages, sending, isSheetOpen, isOpen]);
 
-
-  const sendMessageToAI = async (rawQuestion: string, opts?: { openSheet?: boolean }) => {
+  const sendMessageToAI = async (
+    rawQuestion: string,
+    opts?: { openSheet?: boolean },
+  ) => {
     const q = rawQuestion.trim();
     if (!q || sending) return;
 
@@ -99,7 +96,7 @@ const ChatDialog = () => {
 
     const nextMessages: ChatMessage[] = [
       ...messages,
-      { type: 'user', text: q },
+      { type: "user", text: q },
     ];
     setMessages(nextMessages);
     setSending(true);
@@ -107,30 +104,30 @@ const ChatDialog = () => {
     try {
       const payload = {
         messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
+          { role: "system", content: SYSTEM_PROMPT },
           ...nextMessages.map((m) =>
-            m.type === 'user'
-              ? ({ role: 'user', content: m.text } as const)
-              : ({ role: 'assistant', content: m.text } as const),
+            m.type === "user"
+              ? ({ role: "user", content: m.text } as const)
+              : ({ role: "assistant", content: m.text } as const),
           ),
         ],
       };
 
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
-
         throw new Error("Some Error Occured");
       }
 
       const data = (await res.json()) as { text?: string };
-      const aiText = data.text?.trim() || 'Sorry, I could not generate a response.';
+      const aiText =
+        data.text?.trim() || "Sorry, I could not generate a response.";
 
-      setMessages((prev) => [...prev, { type: 'ai', text: aiText }]);
+      setMessages((prev) => [...prev, { type: "ai", text: aiText }]);
     } catch (err: unknown) {
       console.error(err);
 
@@ -139,8 +136,8 @@ const ChatDialog = () => {
       setMessages((prev) => [
         ...prev,
         {
-          type: 'ai',
-          text: 'Could not Generate Response ',
+          type: "ai",
+          text: "Could not Generate Response ",
         },
       ]);
     } finally {
@@ -148,11 +145,10 @@ const ChatDialog = () => {
     }
   };
 
-
   const handleSuggestedClick = (suggested: string) => {
     setIsOpen(false);
     setIsSheetOpen(true);
-    setQuestion('');
+    setQuestion("");
     void sendMessageToAI(suggested, { openSheet: false });
   };
 
@@ -160,17 +156,16 @@ const ChatDialog = () => {
     const q = question.trim();
     if (!q || sending) return;
 
-    setQuestion('');
+    setQuestion("");
     await sendMessageToAI(q, { openSheet: true });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       void handleSend();
     }
   };
-
 
   return (
     <>
@@ -211,7 +206,6 @@ const ChatDialog = () => {
                     onClick={() => handleSuggestedClick(q)}
                     className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none border text-xs bg-primary/10 border-primary/20 text-primary hover:bg-primary/5 rounded-full px-3 py-1 h-auto disabled:opacity-50"
                   >
-
                     {q}
                   </button>
                 ))}
@@ -268,7 +262,7 @@ const ChatDialog = () => {
 
               return (
                 <div key={index} className="flex gap-2 items-end">
-                  {msg.type === 'ai' && (
+                  {msg.type === "ai" && (
                     <div className="space-y-3">
                       <div className="flex items-center text-muted-foreground font-semibold gap-2">
                         <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center flex-shrink-0">
@@ -297,7 +291,7 @@ const ChatDialog = () => {
                     </div>
                   )}
 
-                  {msg.type === 'user' && (
+                  {msg.type === "user" && (
                     <>
                       <div
                         className="
@@ -311,12 +305,14 @@ const ChatDialog = () => {
                       </div>
 
                       <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                        {user ? <Avatar className="h-8 w-8 rounded-full " >
-
-                          <AvatarImage src={user?.imageUrl || undefined} />
-                          <AvatarFallback>{user?.fullName ?? "U"}</AvatarFallback>
-                        </Avatar> :
-
+                        {user ? (
+                          <Avatar className="h-8 w-8 rounded-full ">
+                            <AvatarImage src={user?.imageUrl || undefined} />
+                            <AvatarFallback>
+                              {user?.fullName ?? "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                        ) : (
                           <svg
                             className="w-5 h-5 text-gray-600"
                             fill="currentColor"
@@ -328,7 +324,7 @@ const ChatDialog = () => {
                               clipRule="evenodd"
                             />
                           </svg>
-                        }
+                        )}
                       </div>
                     </>
                   )}
@@ -342,9 +338,7 @@ const ChatDialog = () => {
                   <Sparkles className="w-4 h-4" />
                 </div>
                 <div className="border flex items-center gap-2  bg-muted text-muted-foreground shadow-sm max-w-[90%] p-3 border-none rounded-none  rounded-r-[14px] rounded-tl-[14px] rounded-bl-none leading-relaxed text-sm font-medium">
-                  <span className="relative">
-                    Processing
-                  </span>
+                  <span className="relative">Processing</span>
                   <Spinner />
                 </div>
               </div>
@@ -372,7 +366,11 @@ const ChatDialog = () => {
                 disabled={!question.trim() || sending}
                 className="h-10"
               >
-                {sending ? <Spinner className="size-8" /> : <Send className="size-8" />}
+                {sending ? (
+                  <Spinner className="size-8" />
+                ) : (
+                  <Send className="size-8" />
+                )}
               </Button>
             </div>
           </div>
