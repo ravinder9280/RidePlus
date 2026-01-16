@@ -4,7 +4,7 @@ import type { ElementType } from "react";
 
 import { cn } from "@/lib/utils";
 
-import UserMobileActions from "../../auth/UserMobileActions";
+import MobileBottomSheet from "./mobile-bottom-sheet";
 import {
   Sheet,
   SheetClose,
@@ -88,7 +88,7 @@ const MobileNav = ({ navigationItems, pathname }: MobileNavProps) => (
       <SheetFooter>
         <div className="flex w-full items-center justify-between border-t px-4 py-2">
           <div className="flex w-full items-center justify-start">
-            <UserMobileActions />
+            <MobileBottomSheet />
           </div>
           <div>
             <ThemeSwitch />

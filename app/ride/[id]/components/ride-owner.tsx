@@ -15,7 +15,7 @@ interface RideUserCard {
   ride: Ride;
   memberStatus: string;
 }
-const RideUserCard = ({ ride, memberStatus }: RideUserCard) => {
+const RideOwner = ({ ride, memberStatus }: RideUserCard) => {
   const createdAt = new Date(ride.createdAt!);
   const isOld = differenceInDays(new Date(), createdAt) > 7;
 
@@ -117,4 +117,4 @@ const RideUserCard = ({ ride, memberStatus }: RideUserCard) => {
   );
 };
 
-export default RideUserCard;
+export default RideOwner;

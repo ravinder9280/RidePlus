@@ -32,3 +32,10 @@ export type RideMember = {
   rideId: string;
   ride: RideInfo;
 };
+
+export type MemberStatus =
+  | "NONE"
+  | "PENDING"
+  | "ACCEPTED"
+  | "DECLINED"
+  | "CANCELLED";

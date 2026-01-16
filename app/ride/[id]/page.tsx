@@ -1,15 +1,15 @@
-import RideMap from "@/components/map/ride-map";
-import { RideDialog } from "@/app/ride/[id]/components/RideDialog";
-import RidePassengers from "@/app/ride/[id]/components/RidePassengers";
+import RideMap from "@/app/ride/[id]/components/ride-map";
+import { RideRequestDialog } from "@/app/ride/[id]/components/ride-request-dialog";
+import RidePassengers from "@/app/ride/[id]/components/ride-passengers";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
-import type { MemberStatus } from "@/app/ride/[id]/components/RideDialog";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import RideUserCard from "./components/RideUserCard";
+import RideOwner from "./components/ride-owner";
 import { Timer } from "lucide-react";
+import type { MemberStatus } from "@/lib/types/Ride";
 
 type PageProps = { params: { id: string } };
 
@@ -52,39 +52,25 @@ export default async function Page({ params }: PageProps) {
   const from = { lat: ride.fromLat, lng: ride.fromLng };
   const to = { lat: ride.toLat, lng: ride.toLng };
 
-  // Resolve current user's membership status for this ride
   let memberStatus: MemberStatus = "NONE";
-  try {
-    const clerk = await currentUser();
-    const clerkId = clerk?.id;
-    if (clerkId) {
-      const user = await prisma.users.findUnique({
-        where: { clerkId },
-        select: { id: true },
+
+  const clerk = await currentUser();
+  const clerkId = clerk?.id;
+  if (clerkId) {
+    const user = await prisma.users.findUnique({
+      where: { clerkId },
+      select: { id: true },
+    });
+    if (user?.id) {
+      const member = await prisma.ride_members.findUnique({
+        where: { rideId_userId: { rideId: ride.id, userId: user.id } },
+        select: { status: true },
       });
-      if (user?.id) {
-        const member = await prisma.ride_members.findUnique({
-          where: { rideId_userId: { rideId: ride.id, userId: user.id } },
-          select: { status: true },
-        });
-        if (member?.status) {
-          memberStatus = member.status as MemberStatus;
-        }
+      if (member?.status) {
+        memberStatus = member.status as MemberStatus;
       }
     }
-  } catch {
-    // ignore errors and default to 'NONE'
   }
-  // const readableDate = ride.departureAt.toLocaleDateString('en-US', {
-  //     weekday: 'long',  // Thursday
-  //     day: 'numeric',   // 16
-  //     month: 'long',    // October
-  // })
-  // const readableTime = ride.departureAt.toLocaleTimeString('en-US', {
-  //     hour: '2-digit',
-  //     minute: '2-digit',
-  //     hour12: true, // 12-hour format with AM/PM
-  // })
 
   return (
     <div className="mx-auto max-w-5xl pb-20 md:max-w-7xl">
@@ -122,7 +108,7 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         {/* user pfp */}
-        <RideUserCard memberStatus={memberStatus} ride={ride} />
+        <RideOwner memberStatus={memberStatus} ride={ride} />
 
         <div className="p-4 border grid grid-cols-2 rounded">
           <div className="flex items-center">
@@ -179,7 +165,7 @@ export default async function Page({ params }: PageProps) {
           <RidePassengers rideId={ride.id} />
         </div>
       </div>
-      <RideDialog
+      <RideRequestDialog
         seatsAvailable={ride.seatsAvailable}
         rideId={ride.id}
         status={ride.status}

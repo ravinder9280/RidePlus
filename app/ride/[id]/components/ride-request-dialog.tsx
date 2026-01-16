@@ -22,14 +22,9 @@ import { requestRide } from "@/actions/rides/request";
 import { toast } from "sonner";
 import { useFormStatus } from "react-dom";
 import { Owner } from "@/lib/types/Ride";
+import type { MemberStatus } from "@/lib/types/Ride";
 
-export type MemberStatus =
-  | "NONE"
-  | "PENDING"
-  | "ACCEPTED"
-  | "DECLINED"
-  | "CANCELLED";
-const memberStatusMap: Record<
+export const memberStatusMap: Record<
   MemberStatus,
   { label: string; icon: React.ReactNode; color: string }
 > = {
@@ -59,7 +54,7 @@ const memberStatusMap: Record<
     color: "bg-destructive",
   },
 };
-export function RideDialog({
+export function RideRequestDialog({
   owner,
   perSeatPrice,
   fromText,

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import RidePin from "../common/RidePin";
+import RidePin from "@/components/common/RidePin";
 
 type Coord = { lng: number; lat: number };
 

@@ -2,12 +2,12 @@ import React from "react";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { useUser, SignOutButton } from "@clerk/nextjs";
-import { SheetClose } from "../ui/sheet";
-import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { SheetClose } from "../../ui/sheet";
+import { Button } from "../../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { useCurrentUserId } from "@/hooks/useCurrentUserId";
 
-const UserMobileActions = () => {
+const MobileBottomSheet = () => {
   const { user, isSignedIn } = useUser();
   const { userId } = useCurrentUserId();
   const imageUrl = user?.imageUrl;
@@ -49,4 +49,4 @@ const UserMobileActions = () => {
   );
 };
 
-export default UserMobileActions;
+export default MobileBottomSheet;
