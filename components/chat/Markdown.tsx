@@ -1,5 +1,5 @@
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const Markdown = ({ children }: { children: string }) => {
   return (
@@ -7,17 +7,17 @@ export const Markdown = ({ children }: { children: string }) => {
       remarkPlugins={[remarkGfm]}
       components={{
         // #, ##, ### ...
-        h1: ({  ...props }) => (
+        h1: ({ ...props }) => (
           <h1 className="text-2xl font-bold mb-3" {...props} />
         ),
-        h2: ({  ...props }) => (
+        h2: ({ ...props }) => (
           <h2 className="text-xl font-semibold mt-4 mb-2" {...props} />
         ),
-        p: ({  ...props }) => (
+        p: ({ ...props }) => (
           <p className="mb-2 leading-relaxed text-sm" {...props} />
         ),
         // links
-        a: ({  href, ...props }) => (
+        a: ({ href, ...props }) => (
           <a
             href={href}
             target="_blank"
@@ -27,19 +27,19 @@ export const Markdown = ({ children }: { children: string }) => {
           />
         ),
         // unordered lists
-        ul: ({  ...props }) => (
+        ul: ({ ...props }) => (
           <ul className="list-disc pl-5 space-y-1 mb-2" {...props} />
         ),
         // ordered lists
-        ol: ({  ...props }) => (
+        ol: ({ ...props }) => (
           <ol className="list-decimal pl-5 space-y-1 mb-2" {...props} />
         ),
         // list items
-        li: ({  ...props }) => <li className="text-sm" {...props} />,
-        strong: ({  ...props }) => <strong className="pr-1" {...props} />,
-        code: ({ inline,  children, ...props }:any) => {
+        li: ({ ...props }) => <li className="text-sm" {...props} />,
+        strong: ({ ...props }) => <strong className="pr-1" {...props} />,
+        code: ({ inline, children, ...props }: any) => {
           const code = String(children).replace(/\n$/, "");
-        
+
           if (inline) {
             return (
               <code
@@ -54,7 +54,7 @@ export const Markdown = ({ children }: { children: string }) => {
               </code>
             );
           }
-        
+
           return (
             <pre
               className="
@@ -71,8 +71,8 @@ export const Markdown = ({ children }: { children: string }) => {
             </pre>
           );
         },
-                // blockquote
-        blockquote: ({  ...props }) => (
+        // blockquote
+        blockquote: ({ ...props }) => (
           <blockquote
             className="border-l-4 border-primary/40 pl-3 py-1 text-sm italic text-muted-foreground my-2"
             {...props}
