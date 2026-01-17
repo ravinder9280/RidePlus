@@ -20,8 +20,8 @@ const MobileTabs = () => {
       image: "/car-plus.png",
     },
     {
-      label: "My Rides",
-      href: "/rides/my",
+      label: "Booked Rides",
+      href: "/rides/booked",
       icon: Car,
       image: "/phone-car.png",
     },
