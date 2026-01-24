@@ -73,7 +73,7 @@ export default async function Page({ params }: PageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-5xl pb-20 md:max-w-7xl">
+    <main className="mx-auto max-w-5xl pb-20 md:max-w-7xl">
       <RideMap
         from={from}
         to={to}
@@ -176,6 +176,6 @@ export default async function Page({ params }: PageProps) {
         toText={ride.toText}
         memberStatus={memberStatus}
       />
-    </div>
+    </main>
   );
 }

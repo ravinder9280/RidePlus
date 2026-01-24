@@ -50,7 +50,7 @@ export const MyRideCard = ({ ride }: { ride: MyRideCardProp }) => {
             <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className=" w-32" align="end">
+        <DropdownMenuContent className=" w-36" align="end">
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <XCircle />

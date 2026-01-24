@@ -1,5 +1,5 @@
 // app/(whatever)/publish-ride/page.tsx
-import RideActionForm from "@/components/rides/rideActionForm";
+import RideActionForm from "@/app/(authenticated)/ride/new/components/new-ride-modal";
 
 export default function PublishRidePage() {
   return (

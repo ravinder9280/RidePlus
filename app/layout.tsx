@@ -43,7 +43,7 @@ export default function RootLayout({
             <>
               <Toaster closeButton position="top-right" richColors={true} />
               <Navbar />
-              <main className="">{children}</main>{" "}
+              {children}
             </>
           </ThemeProvider>
           <ChatDialog />

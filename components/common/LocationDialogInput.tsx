@@ -5,7 +5,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import MapboxAutocomplete from "../location/autocomplete";
-
+import { useFormContext } from "react-hook-form";
 export default function LocationDialogInput({
   namePrefix,
   placeholder,
@@ -22,6 +22,7 @@ export default function LocationDialogInput({
     lat: "",
     lng: "",
   });
+  const { setValue: setFormValue } = useFormContext();
 
   return (
     <div className="relative">
@@ -59,6 +60,15 @@ export default function LocationDialogInput({
               onSelect={(p) => {
                 setValue(p.text);
                 setCoords({ lat: p.lat, lng: p.lng });
+                setFormValue(`${namePrefix}Text`, p.text, {
+                  shouldValidate: true,
+                });
+                setFormValue(`${namePrefix}Lat`, p.lat, {
+                  shouldValidate: true,
+                });
+                setFormValue(`${namePrefix}Lng`, p.lng, {
+                  shouldValidate: true,
+                });
                 setOpen(false);
               }}
             />

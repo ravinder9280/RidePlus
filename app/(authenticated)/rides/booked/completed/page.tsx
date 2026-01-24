@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { MemberStatus } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { MyRideCard } from "./components/booked-ride-card";
+import { MyRideCard } from "../components/booked-ride-card";
 const rideCardSelect = {
   id: true,
   fromText: true,
@@ -11,7 +11,7 @@ const rideCardSelect = {
   owner: true,
 } as const;
 
-const UpcomingRidesPage = async () => {
+const CompletedRidePage = async () => {
   const clerk = await currentUser();
   if (!clerk) {
     redirect("/sign-in");
@@ -38,7 +38,7 @@ const UpcomingRidesPage = async () => {
           },
         },
       ],
-      status: "ACTIVE",
+      status: "COMPLETED",
     },
     orderBy: { departureAt: "asc" },
     select: {
@@ -58,7 +58,7 @@ const UpcomingRidesPage = async () => {
     <div className="mt-6">
       {rides.length === 0 ? (
         <div className=" rounded-xl border border-dashed p-6 text-sm text-muted-foreground">
-          You have not booked any rides yet.
+          You have no rides yet.
         </div>
       ) : (
         <div className=" grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -71,4 +71,4 @@ const UpcomingRidesPage = async () => {
   );
 };
 
-export default UpcomingRidesPage;
+export default CompletedRidePage;

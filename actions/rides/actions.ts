@@ -1,22 +1,20 @@
-// app/(rides)/publish/actions.ts
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { rideSchema } from "@/lib/validations/ride";
+import { NewRideSchema, NewRideSchemaType } from "@/lib/validations/ride";
 import { revalidatePath } from "next/cache";
 import { buildRideCanonicalText } from "@/lib/helper/canonicalText";
 import { generateEmbedding } from "@/lib/langchain/embedding";
 
-export async function publishRide(formData: FormData) {
+export async function publishRide(formData: NewRideSchemaType) {
   try {
     const { userId } = await auth();
     if (!userId) return { ok: false, message: "Unauthorized" };
 
-    const values = Object.fromEntries(formData.entries());
-    const parsed = rideSchema.safeParse(values);
+    const parsed = NewRideSchema.safeParse(formData);
     if (!parsed.success) {
-      return { ok: false, errors: parsed.error.flatten().fieldErrors };
+      return { ok: false, message: parsed.error.issues[0].message };
     }
 
     const {
@@ -65,7 +63,6 @@ export async function publishRide(formData: FormData) {
       },
     });
     const embedding = await generateEmbedding(canonicalText);
-    // Ensure dimension matches pgvector column (vector(768))
     const embeddingVector = `[${embedding.slice(0, 768).join(",")}]`;
 
     await prisma.$executeRaw`

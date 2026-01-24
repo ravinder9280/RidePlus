@@ -21,7 +21,7 @@ export default async function HomePage({
   const denied = get("loc") === "denied" || !fromLat || !fromLng;
 
   return (
-    <div className=" mx-auto mt-[4rem] w-full sm:p-4 md:p-6 lg:p-8 p-2  space-y-6">
+    <main className=" mx-auto mt-[4rem] w-full sm:p-4 md:p-6 lg:p-8 p-2  space-y-6">
       {denied && <AllowLocationBanner />}
       <HomeCarousel />
       <MobileTabs />
@@ -40,6 +40,6 @@ export default async function HomePage({
       <Suspense fallback={<ListSkeleton />}>
         <LatestRides />
       </Suspense>
-    </div>
+    </main>
   );
 }
