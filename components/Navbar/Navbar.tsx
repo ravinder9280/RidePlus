@@ -40,7 +40,7 @@ const navItems = [
       },
       {
         label: "Post a Ride",
-        href: "/ride/new",
+        href: "/rides/new",
         icon: PlusCircle,
         cta: true,
         image: "/car-plus.png",
@@ -65,13 +65,13 @@ const Navbar = () => {
       { label: "Home", href: "/", icon: Home, image: "/car-check.png" },
       {
         label: "Explore Rides",
-        href: "/rides",
+        href: "/rides/search",
         icon: Search,
         image: "/car-check.png",
       },
       {
         label: "Post a Ride",
-        href: "/ride/new",
+        href: "/rides/new",
         icon: PlusCircle,
         cta: true,
         image: "/car-plus.png",
@@ -164,14 +164,14 @@ const Navbar = () => {
           <div className="flex items-center pl-6 ">
             {user ? (
               <div className="flex items-center  gap-4 md:gap-6">
-                <Link href={"/rides"}>
+                <Link href={"/rides/search"}>
                   <Avatar className="size-9 hover:bg-muted rounded-full ">
                     <AvatarFallback className="rounded-sm ">
                       <Search strokeWidth={1} className="size-6 " />
                     </AvatarFallback>
                   </Avatar>
                 </Link>
-                <Link href={"/ride/new"}>
+                <Link href={"/rides/new"}>
                   <Avatar className="size-9 hover:bg-muted rounded-full ">
                     <AvatarFallback className="rounded-sm ">
                       <Plus strokeWidth={1} className="size-6 " />

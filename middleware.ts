@@ -7,6 +7,7 @@ const isPublicRoute = createRouteMatcher([
   "/safety",
   "/sign-in(.*)",
   "/sign-up(.*)",
+  "/api/rides(.*)",
   "/onboarding(.*)", // <- add this
   "/api/webhook/clerk(.*)", // allow webhooks
   "/api/healthz(.*)", // optional health check

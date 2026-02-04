@@ -8,7 +8,7 @@ import { format } from "date-fns";
 export default function RideCard({ r }: { r: Ride }) {
   return (
     <Link
-      href={`/ride/${r.id}`}
+      href={`/rides/${r.id}`}
       className="rounded-xl hover:bg-card/70 bg-card/50 p-4 hover:shadow-md flex flex-col justify-between gap-2 border  transition-shadow"
     >
       <div className="flex items-center gap-3">

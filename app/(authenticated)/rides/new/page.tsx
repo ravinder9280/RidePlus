@@ -1,10 +1,8 @@
-// app/(whatever)/publish-ride/page.tsx
-import RideActionForm from "@/app/(authenticated)/ride/new/components/new-ride-modal";
+import PublishRideForm from "@/app/(authenticated)/rides/new/components/publish-ride-form";
 
 export default function PublishRidePage() {
   return (
     <main className="min-h-screen p-1 py-4  sm:p-2 md:p-4 lg:p-6 ">
-      {/* Header / hero */}
       <div className="text-center flex items-center justify-center mb-10">
         <div className="max-w-2xl">
           <h1 className="text-3xl md:text-5xl font-bold">Publish Your Ride</h1>
@@ -15,9 +13,7 @@ export default function PublishRidePage() {
         </div>
       </div>
 
-      {/* Two-column layout */}
       <div className="grid grid-cols-1  md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-        {/* Left: Why Share */}
         <section className="bg-muted shadow rounded-xl p-6 space-y-4">
           <h2 className="text-xl font-semibold">Why Share Your Ride?</h2>
 
@@ -45,7 +41,6 @@ export default function PublishRidePage() {
           </div>
         </section>
 
-        {/* Right: Form */}
         <section className="bg-secondary shadow rounded-xl">
           <div className="p-6 bg-muted text-secondary-foreground rounded-t-xl">
             <h2 className="text-xl font-semibold">Ride Details</h2>
@@ -53,8 +48,7 @@ export default function PublishRidePage() {
               Fill in your journey information
             </p>
           </div>
-
-          <RideActionForm />
+          <PublishRideForm />
         </section>
       </div>
     </main>

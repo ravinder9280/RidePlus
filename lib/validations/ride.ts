@@ -72,4 +72,41 @@ export const NewRideSchema = z
     }
   });
 
+export const searchRideSchema = z
+  .object({
+    fromLat: z.coerce.number().min(-90).max(90).optional(),
+    fromLng: z.coerce.number().min(-180).max(180).optional(),
+    toLat: z.coerce.number().min(-90).max(90).optional(),
+    toLng: z.coerce.number().min(-180).max(180).optional(),
+    date: z.string().optional(),
+    seats: z.coerce.number().int().min(1).max(8).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(6),
+    page: z.coerce.number().int().min(1).default(1),
+    sort: z
+      .enum([
+        "price_asc",
+        "price_desc",
+        "rating",
+        "created_desc",
+        "created_asc",
+      ])
+      .optional(),
+    verifiedOnly: z.coerce.boolean().optional(),
+    departure: z
+      .enum(["any", "morning", "afternoon", "evening", "night"])
+      .default("any"),
+  })
+  .refine(
+    (data) => {
+      const hasFrom =
+        (data.fromLat !== undefined) === (data.fromLng !== undefined);
+      const hasTo = (data.toLat !== undefined) === (data.toLng !== undefined);
+      return hasFrom && hasTo;
+    },
+    {
+      message:
+        "Both latitude and longitude must be provided together for from/to locations",
+    },
+  );
+
 export type NewRideSchemaType = z.infer<typeof NewRideSchema>;

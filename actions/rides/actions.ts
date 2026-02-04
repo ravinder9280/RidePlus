@@ -2,19 +2,24 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { NewRideSchema, NewRideSchemaType } from "@/lib/validations/ride";
+import {
+  NewRideSchema,
+  NewRideSchemaType,
+  rideSchema,
+} from "@/lib/validations/ride";
 import { revalidatePath } from "next/cache";
-import { buildRideCanonicalText } from "@/lib/helper/canonicalText";
+import { buildRideCanonicalText } from "@/lib/helper/rides";
 import { generateEmbedding } from "@/lib/langchain/embedding";
 
-export async function publishRide(formData: NewRideSchemaType) {
+export async function publishRide(formData: FormData) {
   try {
     const { userId } = await auth();
     if (!userId) return { ok: false, message: "Unauthorized" };
 
-    const parsed = NewRideSchema.safeParse(formData);
+    const values = Object.fromEntries(formData.entries());
+    const parsed = rideSchema.safeParse(values);
     if (!parsed.success) {
-      return { ok: false, message: parsed.error.issues[0].message };
+      return { ok: false, errors: parsed.error.flatten().fieldErrors };
     }
 
     const {

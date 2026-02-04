@@ -3,7 +3,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 const nextConfig = {
   output: "standalone",
   images: {
-    domains: ["img.clerk.com"], // ✅ allow Clerk profile images
+    domains: ["img.clerk.com"],
   },
 
   eslint: {

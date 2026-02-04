@@ -18,7 +18,7 @@ export const useTypewriter = (text: string, speed: number = 15) => {
     const interval = setInterval(() => {
       setDisplayed((prev) => prev + text[i]);
       i += 1;
-      if (i >= text.length) {
+      if (i >= text.length - 1) {
         clearInterval(interval);
       }
     }, speed);

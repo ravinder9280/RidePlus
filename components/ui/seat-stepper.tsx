@@ -6,7 +6,7 @@ import { Minus, Plus } from "lucide-react";
 
 export function SeatSelector({
   min = 1,
-  max = 6,
+  max = 8,
   name,
   value = 1, // Receive value from form
   onChange, // Receive onChange from form
@@ -45,12 +45,12 @@ export function SeatSelector({
         <Minus className="h-4 w-4" />
       </Button>
 
-      <Input
+      <input
         type="number"
         name={name || "seats"}
         value={seats}
         readOnly
-        className="w-12 h-12 bg-transparent text-2xl text-primary border-none focus-visible:ring-0 font-bold text-center"
+        className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-12 h-12 bg-transparent text-3xl p-0 text-primary border-none focus-visible:ring-0 font-bold text-center"
       />
 
       <Button

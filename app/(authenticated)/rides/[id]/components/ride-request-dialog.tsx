@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { Badge } from "../../../../components/ui/badge";
-import { Button } from "../../../../components/ui/button";
+import { Badge } from "../../../../../components/ui/badge";
+import { Button } from "../../../../../components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -13,11 +13,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTrigger,
-} from "../../../../components/ui/dialog";
-import { Label } from "../../../../components/ui/label";
+} from "../../../../../components/ui/dialog";
+import { Label } from "../../../../../components/ui/label";
 import { ArrowRight, Check, Hourglass, Phone, Star, X } from "lucide-react";
-import RidePin from "../../../../components/common/RidePin";
-import { SeatSelector } from "../../../../components/ui/seat-stepper";
+import RidePin from "../../../../../components/common/RidePin";
+import { SeatSelector } from "../../../../../components/ui/seat-stepper";
 import { requestRide } from "@/actions/rides/request";
 import { toast } from "sonner";
 import { useFormStatus } from "react-dom";

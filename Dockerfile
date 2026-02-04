@@ -1,58 +1,53 @@
 # syntax=docker/dockerfile:1.7
-
 ARG BUN_VERSION=1.2.11
-
-# ---------- deps (bun) ----------
 FROM oven/bun:${BUN_VERSION} AS deps
+
+# Install OpenSSL (Required for Prisma)
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Prisma needs OpenSSL at build-time for generate
-RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Copy dependency files
+COPY package*.json bun.lock ./
 
-# Copy minimal files required for dependency install and prisma postinstall
-COPY package.json ./
-# COPY bun.lockb ./bun.lockb   # uncomment if you have it for better caching
-COPY prisma ./prisma
+# IMPORTANT: Copy the prisma directory so 'prisma generate' works during install
+COPY prisma ./prisma/
 
-# Install deps with Bun (will run postinstall -> prisma generate)
-ENV NEXT_TELEMETRY_DISABLED=1
+# Install dependencies
 RUN bun install
 
-# ---------- builder ----------
-FROM deps AS builder
-WORKDIR /app
+# Copy the rest of the source code
 COPY . .
 
-# Provide dummy Clerk keys to avoid build-time prerender errors
-ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=dummy_pk_for_build_only
-ARG CLERK_PUBLISHABLE_KEY=dummy_pk_for_build_only
-ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-ENV CLERK_PUBLISHABLE_KEY=${CLERK_PUBLISHABLE_KEY}
-ENV NEXT_TELEMETRY_DISABLED=1
+# Build Arguments for Public Vars
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+ARG NEXT_PUBLIC_CLERK_SIGN_IN_URL
+ARG NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
+ARG NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
+ARG NEXT_PUBLIC_APP_NAME
+ARG NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_MAPBOX_TOKEN
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+ARG GOOGLE_GEMINI_API_KEY
 
+# Map ARGs to ENVs
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_CLERK_SIGN_IN_URL=$NEXT_PUBLIC_CLERK_SIGN_IN_URL
+ENV NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=$NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
+ENV NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=$NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
+ENV NEXT_PUBLIC_APP_NAME=$NEXT_PUBLIC_APP_NAME
+ENV NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+ENV NEXT_PUBLIC_MAPBOX_TOKEN=$NEXT_PUBLIC_MAPBOX_TOKEN
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV GOOGLE_GEMINI_API_KEY=$GOOGLE_GEMINI_API_KEY
+
+
+# Build the app
 RUN bun run build
 
-# ---------- runner ----------
-FROM oven/bun:${BUN_VERSION} AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV HOSTNAME=0.0.0.0
-ENV PORT=3000
-
-# Install OpenSSL in the runtime image too (critical for Prisma)
-RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
-
-# Copy standalone server and static assets
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-
-# Prisma engines and schema (the engines are in .prisma; client is bundled in standalone)
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/prisma ./prisma
-
 EXPOSE 3000
-
-# Expect real secrets at runtime via env-file
-CMD ["bun", "server.js"]
+CMD ["bun", "start"]

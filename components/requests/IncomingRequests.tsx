@@ -50,13 +50,13 @@ export default function IncomingRequestsClient({
       revalidateOnFocus: true,
     },
   );
-  const rows = data?.rows ?? [];
+  const requests = data?.rows ?? [];
 
   if (isLoading && !fallback) return <ListSkeleton />;
 
   if (error) return <div className="text-sm text-red-600">{error.message}</div>;
 
-  if (rows.length === 0) {
+  if (requests.length === 0) {
     return (
       <div className="rounded-md border p-4 text-sm text-muted-foreground">
         No pending requests.
@@ -66,7 +66,7 @@ export default function IncomingRequestsClient({
 
   return (
     <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {rows.map((m) => (
+      {requests.map((m) => (
         <li key={m.id} className="rounded-md border p-3 flex flex-col gap-2">
           <UserCard
             userName={m.user?.name || "user"}

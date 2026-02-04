@@ -1,12 +1,4 @@
-import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { TaskType } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAIEmbeddings({
-  model: "gemini-embedding-001", // 768 dims
-  taskType: TaskType.RETRIEVAL_DOCUMENT,
-  apiKey: process.env.GOOGLE_GEMINI_API_KEY,
-});
-
+import { genAI } from "../config/google";
 export async function generateEmbedding(text: string): Promise<number[]> {
   if (!process.env.GOOGLE_GEMINI_API_KEY) {
     throw new Error("Missing GOOGLE_GEMINI_API_KEY");

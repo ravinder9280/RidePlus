@@ -1,6 +1,6 @@
-import RideMap from "@/app/ride/[id]/components/ride-map";
-import { RideRequestDialog } from "@/app/ride/[id]/components/ride-request-dialog";
-import RidePassengers from "@/app/ride/[id]/components/ride-passengers";
+import RideMap from "@/app/(authenticated)/rides/[id]/components/ride-map";
+import { RideRequestDialog } from "@/app/(authenticated)/rides/[id]/components/ride-request-dialog";
+import RidePassengers from "@/app/(authenticated)/rides/[id]/components/ride-passengers";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
@@ -13,7 +13,7 @@ import type { MemberStatus } from "@/lib/types/Ride";
 
 type PageProps = { params: { id: string } };
 
-export default async function Page({ params }: PageProps) {
+export default async function RideDetailPage({ params }: PageProps) {
   const ride = await prisma.rides.findUnique({
     where: { id: params.id },
     select: {
