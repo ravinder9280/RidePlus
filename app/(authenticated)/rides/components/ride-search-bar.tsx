@@ -1,37 +1,29 @@
 "use client";
 
 import { MoveRight, Search } from "lucide-react";
-import { useRideSearch } from "@/hooks/use-ride-search";
 import { format, isToday, parseISO } from "date-fns";
-import { useRideSearchStore } from "@/stores/ride-search-store";
+import { useSearchParams } from "next/navigation";
 
 type RideSearchBarProps = {
-  onClick?: () => void;
-  onFilterClick?: () => void;
   className?: string;
 };
 
-export default function RideSearchBar({
-  onClick,
-  className = "",
-}: RideSearchBarProps) {
-  const { filters } = useRideSearch();
-  const { setSearchDialogOpen } = useRideSearchStore();
-
-  const fromText = filters.fromText || "";
-  const toText = filters.toText || "";
-  const dateParam = filters.date || "";
-  const seats = filters.seats || 1;
+export default function RideSearchBar({ className = "" }: RideSearchBarProps) {
+  const searchParams = useSearchParams();
+  const fromText = searchParams.get("fromText") || "";
+  const toText = searchParams.get("toText") || "";
+  const date = searchParams.get("date") || "";
+  const seats = searchParams.get("seats") || "1";
 
   const formatDate = () => {
-    if (!dateParam) return "Today";
+    if (!date) return "Today";
 
     try {
-      const date = parseISO(dateParam);
-      if (isToday(date)) {
+      const newDate = parseISO(date);
+      if (isToday(newDate)) {
         return "Today";
       }
-      return format(date, "MMM d, yyyy");
+      return format(newDate, "MMM d, yyyy");
     } catch {
       return "Today";
     }
@@ -40,17 +32,8 @@ export default function RideSearchBar({
   const formattedDate = formatDate();
   const hasSearchCriteria = Boolean(fromText && toText);
 
-  const handleClick = () => {
-    if (onClick) {
-      onClick();
-    } else {
-      setSearchDialogOpen(true);
-    }
-  };
-
   return (
     <div
-      onClick={handleClick}
       className={`
         flex items-center gap-3 
         w-full rounded-lg 
@@ -75,7 +58,7 @@ export default function RideSearchBar({
             </div>
             <div className="text-xs text-muted-foreground mt-0.5">
               {formattedDate}, {seats}{" "}
-              {seats === 1 ? "passenger" : "passengers"}
+              {Number(seats) === 1 ? "passenger" : "passengers"}
             </div>
           </>
         ) : (

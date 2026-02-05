@@ -8,6 +8,7 @@ import LocationDialogInput from "../../common/LocationDialogInput";
 import { Spinner } from "../../ui/spinner";
 import { useRideSearch } from "../../../hooks/use-ride-search";
 import { SeatSelector } from "../../ui/seat-stepper";
+import { DateSelector } from "@/components/common/date-selector";
 
 type RideSearchFormProps = {
   onSearch?: () => void;
@@ -25,7 +26,6 @@ export default function RideSearchForm({
   const [seats, setSeats] = useState<string>(String(filters.seats || 1));
   const [isFormValid, setIsFormValid] = useState(false);
 
-  // Function to check form validity
   const checkFormValidity = () => {
     const get = (n: string) =>
       (
@@ -40,24 +40,21 @@ export default function RideSearchForm({
     const toLat = get("toLat");
     const toLng = get("toLng");
 
-    // Validate that both from and to locations are filled with coordinates
     const hasFrom = Boolean(fromText && fromLat && fromLng);
     const hasTo = Boolean(toText && toLat && toLng);
 
     return hasFrom && hasTo;
   };
 
-  // Monitor for changes to hidden inputs
   useEffect(() => {
     const interval = setInterval(() => {
       setIsFormValid(checkFormValidity());
-    }, 300); // Check every 300ms
+    }, 300);
 
     return () => clearInterval(interval);
   }, []);
 
   const handleSubmit = () => {
-    // Prevent submission if form is invalid
     if (!isFormValid) {
       return;
     }
@@ -77,11 +74,9 @@ export default function RideSearchForm({
 
     const updates: any = {};
 
-    // Store location text for display (not in URL)
     if (fromText) updates.fromText = fromText;
     if (toText) updates.toText = toText;
 
-    // Store coordinates for API/search (in URL)
     if (fromLat) updates.fromLat = Number(fromLat);
     if (fromLng) updates.fromLng = Number(fromLng);
     if (toLat) updates.toLat = Number(toLat);
@@ -115,10 +110,10 @@ export default function RideSearchForm({
 
         <div>
           <label className="mb-2 block text-sm font-medium">Date</label>
-          <Input
-            type="date"
+          <DateSelector
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(newDate: string) => setDate(newDate)}
+            placeholder="Select date"
           />
         </div>
 

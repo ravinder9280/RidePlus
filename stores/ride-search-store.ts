@@ -14,13 +14,11 @@ export type DepartureTime =
   | "night";
 
 export interface RideSearchFilters {
-  // Location coordinates (for API/search)
   fromLat?: number;
   fromLng?: number;
   toLat?: number;
   toLng?: number;
 
-  // Location text (for display only, NOT in URL)
   fromText?: string;
   toText?: string;
 
@@ -62,7 +60,6 @@ export const useRideSearchStore = create<RideSearchState>()((set, get) => ({
       filters: {
         ...state.filters,
         ...updates,
-        // Reset page when filters change
         page: updates.page !== undefined ? updates.page : 1,
       },
     })),
@@ -78,26 +75,18 @@ export const useRideSearchStore = create<RideSearchState>()((set, get) => ({
     const { filters } = get();
     const params = new URLSearchParams();
 
-    // Only include coordinates in URL, NOT fromText/toText
     if (filters.fromLat !== undefined)
       params.set("fromLat", String(filters.fromLat));
     if (filters.fromLng !== undefined)
       params.set("fromLng", String(filters.fromLng));
     if (filters.toLat !== undefined) params.set("toLat", String(filters.toLat));
     if (filters.toLng !== undefined) params.set("toLng", String(filters.toLng));
+    filters.fromText && params.set("fromText", filters.fromText);
+    filters.toText && params.set("toText", filters.toText);
 
     if (filters.date) params.set("date", filters.date);
-    if (filters.departure && filters.departure !== "any") {
-      params.set("departure", filters.departure);
-    }
-    params.set("seats", String(filters.seats));
-    if (filters.sort) params.set("sort", filters.sort);
-    if (filters.verifiedOnly) params.set("verifiedOnly", "true");
-    params.set("page", String(filters.page));
-    params.set("limit", String(filters.limit));
 
-    // Note: fromText and toText are NOT included in URL params
-    // They are stored in Zustand for display purposes only
+    params.set("seats", String(filters.seats));
 
     return params;
   },
