@@ -17,7 +17,7 @@ import {
 import { Label } from "../../../../../components/ui/label";
 import { ArrowRight, Check, Hourglass, Phone, Star, X } from "lucide-react";
 import RidePin from "../../../../../components/common/RidePin";
-import { SeatSelector } from "../../../../../components/ui/seat-stepper";
+import { SeatSelector } from "../../../../../components/ui/seat-selector";
 import { requestRide } from "@/actions/rides/request";
 import { toast } from "sonner";
 import { useFormStatus } from "react-dom";
@@ -79,6 +79,7 @@ export function RideRequestDialog({
   const router = useRouter();
   const closeRef = useRef<HTMLButtonElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [seats, setSeats] = useState<number>(1);
 
   const isExpired = (() => {
     if (!startsAt) return false;
@@ -118,7 +119,7 @@ export function RideRequestDialog({
     );
   }
 
-  async function clientAfterSubmit(formData: FormData) {
+  async function submitRequest(formData: FormData) {
     if (isSubmitting) return; // Prevent multiple submissions
 
     setIsSubmitting(true);
@@ -218,7 +219,7 @@ export function RideRequestDialog({
 
                 <form
                   action={async (formData) => {
-                    await clientAfterSubmit(formData);
+                    await submitRequest(formData);
                   }}
                 >
                   <div className="grid gap-4">
@@ -246,7 +247,13 @@ export function RideRequestDialog({
                       >
                         Number of seats
                       </Label>
-                      <SeatSelector min={1} max={seatsAvailable} />
+                      <SeatSelector
+                        min={1}
+                        max={seatsAvailable}
+                        name="seats"
+                        value={seats}
+                        onChange={setSeats}
+                      />
                     </div>
                   </div>
 

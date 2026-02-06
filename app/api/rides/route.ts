@@ -78,7 +78,7 @@ export const GET = async (req: NextRequest) => {
         };
       }
     } else if (date) {
-      const start = new Date(`${date}T00:00:00`);
+      const start = new Date(`${date}`);
       where.departureAt = { gte: start };
     } else {
       where.departureAt = { gte: minDate };

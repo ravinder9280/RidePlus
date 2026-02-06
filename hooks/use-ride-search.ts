@@ -44,8 +44,10 @@ export function useRideSearch() {
         updates.toLat = Number(urlParams.get("toLat"));
       if (urlParams.has("toLng"))
         updates.toLng = Number(urlParams.get("toLng"));
-      if (urlParams.has("date"))
-        updates.date = urlParams.get("date") || undefined;
+      if (urlParams.has("date")) {
+        const date = new Date(urlParams.get("date") || "");
+        updates.date = date || undefined;
+      }
       if (urlParams.has("departure")) {
         updates.departure = urlParams.get("departure") as any;
       }

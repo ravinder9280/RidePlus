@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
@@ -10,18 +10,32 @@ export default function LocationDialogInput({
   namePrefix,
   placeholder,
   required = true,
+  initialValue, // Add this
+  initialCoords, // Add this
 }: {
   label?: string;
   namePrefix: "from" | "to";
   placeholder?: string;
   required?: boolean;
+  initialValue?: string; // Add this
+  initialCoords?: { lat: number; lng: number }; // Add this
 }) {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initialValue || "");
   const [coords, setCoords] = useState<{ lat: number | ""; lng: number | "" }>({
-    lat: "",
-    lng: "",
+    lat: initialCoords?.lat || "",
+    lng: initialCoords?.lng || "",
   });
+
+  // Sync with initial values when they change
+  useEffect(() => {
+    if (initialValue) {
+      setValue(initialValue);
+    }
+    if (initialCoords) {
+      setCoords({ lat: initialCoords.lat, lng: initialCoords.lng });
+    }
+  }, [initialValue, initialCoords]);
 
   return (
     <div className="relative">

@@ -22,7 +22,7 @@ export interface RideSearchFilters {
   fromText?: string;
   toText?: string;
 
-  date?: string;
+  date?: Date;
   departure: DepartureTime;
 
   seats: number;
@@ -84,7 +84,7 @@ export const useRideSearchStore = create<RideSearchState>()((set, get) => ({
     filters.fromText && params.set("fromText", filters.fromText);
     filters.toText && params.set("toText", filters.toText);
 
-    if (filters.date) params.set("date", filters.date);
+    if (filters.date) params.set("date", filters.date.toString());
 
     params.set("seats", String(filters.seats));
 

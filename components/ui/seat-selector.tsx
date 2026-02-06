@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 
@@ -8,8 +7,8 @@ export function SeatSelector({
   min = 1,
   max = 8,
   name,
-  value = 1, // Receive value from form
-  onChange, // Receive onChange from form
+  value = 1,
+  onChange,
 }: {
   min?: number;
   max?: number;
@@ -17,7 +16,6 @@ export function SeatSelector({
   value?: number;
   onChange?: (value: number) => void;
 }) {
-  // Use the value from props or fallback to min
   const seats = value;
 
   const decrement = () => {
