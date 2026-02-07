@@ -96,7 +96,11 @@ export default function RideSearchBar({ className = "" }: RideSearchBarProps) {
         </div>
       </DialogTrigger>
 
-      <DialogContent className="p-0 gap-0" showCloseButton={false}>
+      <DialogContent
+        className="p-0 gap-0"
+        showCloseButton={false}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <RideSearchForm
           onSearch={() => {
             setOpen(false);
