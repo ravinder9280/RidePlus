@@ -19,8 +19,8 @@ const NotificationBadge = () => {
   const count = data?.count ?? 0;
   console.log(count);
   return (
-    <div className="relative w-full hover:bg-muted rounded-full">
-      <Avatar className="size-9 rounded-sm">
+    <div className="relative w-full hover:bg-muted rounded-full hover:cursor-pointer">
+      <Avatar className="size-9  ">
         <AvatarFallback className="rounded-sm ">
           <Bell strokeWidth={1} className="size-6" />
         </AvatarFallback>

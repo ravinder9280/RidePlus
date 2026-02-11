@@ -11,53 +11,41 @@ import {
   Plus,
   Home,
   User,
+  LogInIcon,
+  LogOutIcon,
 } from "lucide-react";
 
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
+  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { usePathname } from "next/navigation";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import NotificationBadge from "../common/NotificationBadge";
 import MobileNav from "./Mobile/mobile-nav";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useCurrentUserId } from "@/hooks/useCurrentUserId";
-const navItems = [
-  { label: "Home", href: "/" },
-  {
-    label: "Rides",
-    children: [
-      {
-        label: "Explore Rides",
-        href: "/rides",
-        icon: Search,
-        image: "/car-check.png",
-      },
-      {
-        label: "Post a Ride",
-        href: "/rides/new",
-        icon: PlusCircle,
-        cta: true,
-        image: "/car-plus.png",
-      },
-      {
-        label: "Booked Rides",
-        href: "/rides/booked",
-        icon: Car,
-        image: "/phone-car.png",
-      },
-    ],
-  },
-];
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const Navbar = () => {
   const { user } = useUser();
   const { userId } = useCurrentUserId();
+  const imageUrl = user?.imageUrl;
+  const name = user?.fullName || user?.firstName || "User";
+  const initials = (user?.firstName?.[0] || "") + (user?.lastName?.[0] || "");
+
   const pathname = usePathname();
 
   const mobileSheetItems = useMemo(
@@ -118,80 +106,100 @@ const Navbar = () => {
               <span className="ml-2">RidePlus</span>
             </Link>
           </div>
-          <div className="hidden md:flex items-center justify-center gap-4">
-            {navItems.map((item, idx) =>
-              item.children ? (
-                <NavigationMenu key={6}>
-                  <NavigationMenuList>
-                    <NavigationMenuItem className="hover:bg-transparent">
-                      <NavigationMenuTrigger className="text-[16px]">
-                        {item.label}
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent className="">
-                        <div className=" p-2 grid w-48 ">
-                          {item.children.map((i, id) => (
-                            <Button
-                              variant={"ghost"}
-                              className={"justify-start"}
-                              key={id}
-                              asChild
-                            >
-                              <Link href={i.href || ""}>
-                                <i.icon /> {i.label}
+
+          <div className="flex items-center gap-4">
+            <NavigationMenu>
+              <NavigationMenuList className="flex items-center gap-4 md:gap-6">
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/rides/search"
+                      className="flex items-center gap-2 hover:bg-muted rounded-full md:rounded-md p-2"
+                    >
+                      <Search size={24} strokeWidth={1} />
+                      <span className="text-sm font-medium hidden md:block">
+                        Find a Ride
+                      </span>
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/rides/new"
+                      className="flex items-center gap-2 hover:bg-muted rounded-full md:rounded-md p-2"
+                    >
+                      <Plus size={24} strokeWidth={1} />
+                      <span className="text-sm font-medium hidden md:block">
+                        Post a Ride
+                      </span>
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                {user ? (
+                  <>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink asChild>
+                        <Link href="/requests">
+                          <NotificationBadge />
+                        </Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Avatar className="size-9">
+                            {imageUrl ? (
+                              <AvatarImage src={imageUrl} alt={name} />
+                            ) : (
+                              <AvatarFallback>{initials || "U"}</AvatarFallback>
+                            )}
+                          </Avatar>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-44">
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem asChild>
+                              <Link
+                                href={userId ? `/user/${userId}` : "/profile"}
+                              >
+                                <User />
+                                Profile
                               </Link>
-                            </Button>
-                          ))}
-                        </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href="/rides/booked">
+                                <Car />
+                                Booked Rides
+                              </Link>
+                            </DropdownMenuItem>
+                          </DropdownMenuGroup>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem asChild>
+                            <SignOutButton redirectUrl="/sign-in">
+                              <div className="flex items-center gap-2">
+                                <LogOutIcon />
+                                <span> Logout</span>
+                              </div>
+                            </SignOutButton>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <NavigationMenuContent>
+                        <NavigationMenuLink>Link</NavigationMenuLink>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
-                  </NavigationMenuList>
-                </NavigationMenu>
-              ) : (
-                <Button
-                  variant={"ghost"}
-                  key={idx}
-                  className={cn(
-                    pathname === item.href && "border-b",
-                    "text-[16px]  border-primary shadow-none hover:bg-transparent hover:border-b rounded-none transition-colors duration-300)",
-                  )}
-                  asChild
-                >
-                  <Link href={item.href || ""}>{item.label}</Link>
-                </Button>
-              ),
-            )}
-          </div>
-          <div className="flex items-center pl-6 ">
-            {user ? (
-              <div className="flex items-center  gap-4 md:gap-6">
-                <Link href={"/rides/search"}>
-                  <Avatar className="size-9 hover:bg-muted rounded-full ">
-                    <AvatarFallback className="rounded-sm ">
-                      <Search strokeWidth={1} className="size-6 " />
-                    </AvatarFallback>
-                  </Avatar>
-                </Link>
-                <Link href={"/rides/new"}>
-                  <Avatar className="size-9 hover:bg-muted rounded-full ">
-                    <AvatarFallback className="rounded-sm ">
-                      <Plus strokeWidth={1} className="size-6 " />
-                    </AvatarFallback>
-                  </Avatar>
-                </Link>
-                <Link href={"/requests"}>
-                  <NotificationBadge />
-                </Link>
-                <div className="hidden md:block">
-                  <UserButton
-                    userProfileUrl={userId ? `/user/${userId}` : undefined}
-                  />
-                </div>
-              </div>
-            ) : (
-              <Button asChild>
-                <Link href={"/sign-in"}>SignIn</Link>
-              </Button>
-            )}
+                  </>
+                ) : (
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Button asChild>
+                        <Link href={"/sign-in"}>SignIn</Link>
+                      </Button>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                )}
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
         </div>
       </div>
