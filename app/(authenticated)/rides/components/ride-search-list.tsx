@@ -5,9 +5,8 @@ import { useSearchParams } from "next/navigation";
 import type { Ride } from "@/lib/types/Ride";
 import RideCard from "@/components/rides/ride-card";
 import { ListSkeleton } from "@/components/common/ListSkeleton";
-import { Spinner } from "@/components/ui/spinner";
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 10;
 
 export default function RideSearchList() {
   const searchParams = useSearchParams();
@@ -154,17 +153,8 @@ export default function RideSearchList() {
     urlParamsSignature,
   ]);
 
-  // const hasFilters = useMemo(() => {
-  //   return (
-  //     searchParams.has("sort") ||
-  //     searchParams.has("verifiedOnly") ||
-  //     (searchParams.has("departure") &&
-  //       searchParams.get("departure") !== "any")
-  //   );
-  // }, [searchParams]);
-
   if (isInitialLoading) {
-    return <ListSkeleton />;
+    return <ListSkeleton size={8} className="md:grid-cols-1 lg:grid-cols-2" />;
   }
 
   if (error) {
@@ -174,9 +164,7 @@ export default function RideSearchList() {
           <h3 className="font-medium text-destructive">Search Error</h3>
         </div>
         <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-8 text-center">
-          <p className="mb-2 font-medium text-destructive">
-            Unable to load rides
-          </p>
+          <p className="mb-2 font-medium text-red-500">Unable to load rides</p>
           <p className="text-sm text-muted-foreground">{error}</p>
         </div>
       </div>
@@ -198,23 +186,15 @@ export default function RideSearchList() {
 
   return (
     <div className="space-y-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {items.map((ride) => (
           <RideCard key={ride.id} r={ride} />
         ))}
       </div>
 
-      <div ref={loadMoreRef} className="flex justify-center py-6">
+      <div ref={loadMoreRef} className=" mt-4">
         {isLoadingMore && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Spinner className="size-4" />
-            <span>Loading more rides...</span>
-          </div>
-        )}
-        {!hasMore && items.length > 0 && (
-          <p className="text-xs text-muted-foreground">
-            You&apos;ve reached the end of the list.
-          </p>
+          <ListSkeleton className="md:grid-cols-1 lg:grid-cols-2" />
         )}
       </div>
     </div>

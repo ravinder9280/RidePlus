@@ -8,13 +8,14 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/rides(.*)",
-  "/onboarding(.*)", // <- add this
-  "/api/webhook/clerk(.*)", // allow webhooks
-  "/api/healthz(.*)", // optional health check
-  "/api/rides/search(.*)", // <-- make search public
-  "/api/cron/cleanup", // <-- make search public
+  "/onboarding(.*)",
+  "/api/webhook/clerk(.*)",
+  "/api/healthz(.*)",
+  "/api/cron/cleanup",
   "/api/chat",
-  "/api/cron/(.*)", ///make vercel cron job public
+  "/api/cron/(.*)",
+  "/rides/search(.*)",
+  "/rides(.*)",
 ]);
 
 const isOnboardingRoute = createRouteMatcher(["/onboarding(.*)"]);
