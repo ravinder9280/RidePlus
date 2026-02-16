@@ -94,7 +94,7 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[3] transition-all duration-300 bg-dark/80  shadow-md backdrop-blur-sm">
-      <div className="w-full container mx-auto sm:px-6 md:px-12 lg:px-24 xl:px-0 px-4">
+      <div className="w-full container mx-auto sm:px-2 md:px-12 lg:px-24 xl:px-0 px-4">
         <div className="flex items-center h-16">
           <div className="flex-1 flex items-center gap-4">
             <MobileNav navigationItems={mobileSheetItems} pathname={pathname} />
@@ -109,7 +109,7 @@ const Navbar = () => {
 
           <div className="flex items-center gap-4">
             <NavigationMenu>
-              <NavigationMenuList className="flex items-center gap-4 md:gap-6">
+              <NavigationMenuList className="flex items-center gap-1 md:gap-6">
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
@@ -145,10 +145,10 @@ const Navbar = () => {
                         </Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
-                    <NavigationMenuItem>
+                    <NavigationMenuItem className="hidden md:block">
                       <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Avatar className="size-9">
+                        <DropdownMenuTrigger className="ring-0 outline-none">
+                          <Avatar className="size-8">
                             {imageUrl ? (
                               <AvatarImage src={imageUrl} alt={name} />
                             ) : (
@@ -184,9 +184,6 @@ const Navbar = () => {
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                      <NavigationMenuContent>
-                        <NavigationMenuLink>Link</NavigationMenuLink>
-                      </NavigationMenuContent>
                     </NavigationMenuItem>
                   </>
                 ) : (
