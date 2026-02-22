@@ -1,4 +1,3 @@
-// app/actions/requests/owner.ts
 "use server";
 
 import { currentUser } from "@clerk/nextjs/server";
@@ -30,16 +29,26 @@ export async function acceptRequest(memberID: string) {
     if (member.status !== "PENDING")
       return { ok: false, message: "Request is not pending" };
 
-    // ensure enough seats still available
-    if (member.ride.seatsAvailable < member.seatsRequested) {
-      return { ok: false, message: "Seats no longer available" };
-    }
-
     const updated = await prisma.$transaction(async (tx) => {
+      const ride = (await tx.$queryRaw`
+        SELECT * FROM rides
+        WHERE id = ${member.rideId}
+        FOR UPDATE
+      `) as unknown as { seatsAvailable: number }[];
+
+      if (!ride.length || ride[0].seatsAvailable < member.seatsRequested) {
+        return { ok: false, message: "Seats no longer available" };
+      }
+
       await tx.rides.update({
         where: { id: member.rideId },
-        data: { seatsAvailable: { decrement: member.seatsRequested } },
+        data: {
+          seatsAvailable: {
+            decrement: member.seatsRequested,
+          },
+        },
       });
+
       return tx.ride_members.update({
         where: { id: member.id },
         data: { status: "ACCEPTED" },
@@ -51,7 +60,6 @@ export async function acceptRequest(memberID: string) {
       select: { email: true, name: true },
     });
 
-    // Send email notification (non-blocking)
     if (rider?.email) {
       try {
         const rideUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/ride/${member.rideId}`;
@@ -75,7 +83,7 @@ export async function acceptRequest(memberID: string) {
       }
     }
 
-    console.log("Request Accepted Successfully", updated.status);
+    console.log("Request Accepted Successfully", updated);
     return {
       ok: true,
       member: updated,

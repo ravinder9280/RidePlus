@@ -6,6 +6,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
+  
   directUrl = env("DIRECT_URL")
   
 }
@@ -22,10 +23,42 @@ model users {
   rating      Int          @default(5)
   rides       rides[]       @relation("UserRides")
   memberships ride_members[]
-
+  messages ride_messages[]
   @@index([clerkId])
 }
 
+model ride_chats {
+  id        String   @id @default(cuid())
+  rideId    String   
+  participantA  String
+  participantB  String
+  isActive  Boolean  @default(true) // becomes false when ride is completed/cancelled
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  ride     rides            @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  messages ride_messages[]  
+  
+  @@index([rideId])
+  @@index([isActive])
+  @@unique([rideId, participantA, participantB])
+}
+
+model ride_messages {
+  id        String   @id @default(cuid())
+  chatId    String
+  senderId  String   // userId from users table
+  content   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  chat   ride_chats @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender users      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  
+  @@index([chatId, createdAt])
+  @@index([senderId])
+}
 model rides {
   id             String       @id @default(cuid())
   ownerId        String
@@ -51,7 +84,7 @@ model rides {
   members        ride_members[]
   embedding      ride_embeddings?
   canonicalText  String?
-
+  chat           ride_chats[]
   @@index([status, departureAt])
   @@index([ownerId])
   @@index([fromLat, fromLng])

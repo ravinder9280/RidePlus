@@ -72,6 +72,38 @@ export type Database = {
         };
         Relationships: [];
       };
+      ride_chats: {
+        Row: {
+          createdAt: string;
+          id: string;
+          isActive: boolean;
+          rideId: string;
+          updatedAt: string;
+        };
+        Insert: {
+          createdAt?: string;
+          id: string;
+          isActive?: boolean;
+          rideId: string;
+          updatedAt: string;
+        };
+        Update: {
+          createdAt?: string;
+          id?: string;
+          isActive?: boolean;
+          rideId?: string;
+          updatedAt?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ride_chats_rideId_fkey";
+            columns: ["rideId"];
+            isOneToOne: false;
+            referencedRelation: "rides";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ride_embeddings: {
         Row: {
           createdAt: string;
@@ -146,6 +178,51 @@ export type Database = {
           {
             foreignKeyName: "ride_members_userId_fkey";
             columns: ["userId"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ride_messages: {
+        Row: {
+          chatId: string;
+          content: string;
+          createdAt: string;
+          id: string;
+          isRead: boolean;
+          senderId: string;
+          updatedAt: string;
+        };
+        Insert: {
+          chatId: string;
+          content: string;
+          createdAt?: string;
+          id: string;
+          isRead?: boolean;
+          senderId: string;
+          updatedAt: string;
+        };
+        Update: {
+          chatId?: string;
+          content?: string;
+          createdAt?: string;
+          id?: string;
+          isRead?: boolean;
+          senderId?: string;
+          updatedAt?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ride_messages_chatId_fkey";
+            columns: ["chatId"];
+            isOneToOne: false;
+            referencedRelation: "ride_chats";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ride_messages_senderId_fkey";
+            columns: ["senderId"];
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
@@ -292,7 +369,7 @@ export type Database = {
         Args: {
           match_count: number;
           match_threshold: number;
-          query_embedding: number[];
+          query_embedding: string;
         };
         Returns: {
           departure_at: string;

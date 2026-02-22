@@ -1,4 +1,3 @@
-// emails/RequestDecisionRider.tsx
 import * as React from "react";
 import { Button, Hr, Link, Section, Text } from "@react-email/components";
 import { EmailLayout } from "./layout";

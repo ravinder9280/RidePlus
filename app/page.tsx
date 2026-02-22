@@ -6,6 +6,7 @@ import { ListSkeleton } from "@/components/common/ListSkeleton";
 import { Suspense } from "react";
 import LatestRides from "@/components/rides/latest-rides";
 import { HomeCarousel } from "@/components/HomeCarousel";
+import ChatDialog from "@/components/chat/chatDialog";
 export default async function HomePage({
   searchParams,
 }: {
@@ -40,6 +41,7 @@ export default async function HomePage({
       <Suspense fallback={<ListSkeleton />}>
         <LatestRides />
       </Suspense>
+      <ChatDialog />
     </main>
   );
 }

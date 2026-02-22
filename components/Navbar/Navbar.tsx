@@ -11,17 +11,14 @@ import {
   Plus,
   Home,
   User,
-  LogInIcon,
   LogOutIcon,
 } from "lucide-react";
 
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { usePathname } from "next/navigation";
 import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
@@ -109,7 +106,7 @@ const Navbar = () => {
 
           <div className="flex items-center gap-4">
             <NavigationMenu>
-              <NavigationMenuList className="flex items-center gap-1 md:gap-6">
+              <NavigationMenuList className="flex items-center gap-1 sm:gap-6">
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link

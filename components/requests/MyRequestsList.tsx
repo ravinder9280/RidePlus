@@ -67,7 +67,7 @@ export default function MyRequestsListClient({
             userImage={m.ride.owner?.imageUrl ?? "/logo.png"}
           />
 
-          <Link href={`/ride/${m.rideId}`} className="font-medium">
+          <Link href={`/rides/${m.rideId}`} className="font-medium">
             <RidePin
               fromText={m.ride.fromText}
               toText={m.ride.toText}

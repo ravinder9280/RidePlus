@@ -1,4 +1,3 @@
-// emails/layout.tsx
 import * as React from "react";
 import {
   Html,

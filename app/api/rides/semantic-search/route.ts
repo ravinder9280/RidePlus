@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     // Call the match_rides RPC function
     const { data, error } = await supabase.rpc("match_rides", {
-      query_embedding: embedding.slice(0, 768), // Ensure 768 dimensions
+      query_embedding: embedding.slice(0, 768).join(","), // Ensure 768 dimensions
       match_threshold,
       match_count,
     });

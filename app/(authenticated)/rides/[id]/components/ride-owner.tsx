@@ -106,12 +106,9 @@ const RideOwner = ({ ride, memberStatus }: RideUserCard) => {
             </div>
           </DialogContent>
         </Dialog>
-        <Button
-          className="rounded-full h-9 w-9 p-4 text-white bg-black"
-          disabled={memberStatus !== "ACCEPTED"}
-        >
+        <Link href={`/rides/${ride.id}/chat/${ride.owner?.id}`}>
           <MessageCircleMore size={18} />
-        </Button>
+        </Link>
       </div>
     </div>
   );

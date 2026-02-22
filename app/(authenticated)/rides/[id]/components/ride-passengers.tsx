@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { auth } from "@clerk/nextjs/server";
+import { MessageCircle } from "lucide-react";
 
 type Props = { rideId: string };
 
@@ -90,6 +91,16 @@ export default async function RidePassengers({ rideId }: Props) {
                   - If anyone else → no buttons */}
                 {isOwner ? (
                   <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      asChild
+                      title="Chat with passenger"
+                    >
+                      <Link href={`/rides/${ride.id}/chat/${m.user.id}`}>
+                        <MessageCircle className="h-4 w-4" />
+                      </Link>
+                    </Button>
                     <Button
                       size="sm"
                       variant="outline"

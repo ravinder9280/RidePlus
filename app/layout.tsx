@@ -6,7 +6,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
-import ChatDialog from "@/components/chat/chatDialog";
 
 import * as Sentry from "@sentry/nextjs";
 const outfit = Outfit({
@@ -46,7 +45,6 @@ export default function RootLayout({
               {children}
             </>
           </ThemeProvider>
-          <ChatDialog />
         </body>
       </html>
     </ClerkProvider>
