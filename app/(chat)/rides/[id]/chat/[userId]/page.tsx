@@ -17,9 +17,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { format, isToday, isYesterday } from "date-fns";
-import { Spinner } from "@/components/ui/spinner";
 import sendMessage from "@/actions/rides/message";
 import { useCurrentUserId } from "@/hooks/useCurrentUserId";
+import ChatSkeleton from "./components/chat-skeleton";
 
 type Message = {
   message: string;
@@ -161,15 +161,15 @@ const RideChatPage = ({
 
   if (loading)
     return (
-      <div className="flex h-screen items-center justify-center w-full">
-        <Spinner />
+      <div className="flex h-screen items-center justify-center w-full pt-[4rem]">
+        <ChatSkeleton />
       </div>
     );
 
   return (
     <main className="flex flex-col h-[calc(100vh-64px)] mt-[4rem]">
       <div className="flex flex-col h-full max-w-2xl w-full mx-auto">
-        <div>
+        <div className="sticky top-0 z-10">
           <div className="flex items-center gap-2 px-4 py-2 border-b border-white/10">
             <Link
               href={`/rides/${rideId}`}
@@ -178,12 +178,21 @@ const RideChatPage = ({
               <ArrowLeft className="size-6 text-primary" />
             </Link>
             <div className="flex items-center gap-2">
-              <Avatar className="size-8">
-                <AvatarImage src={chatData?.otherUser.imageUrl ?? undefined} />
-                <AvatarFallback>
-                  {chatData?.otherUser.name?.[0] ?? "U"}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="size-8 ">
+                  <AvatarImage
+                    src={chatData?.otherUser.imageUrl ?? undefined}
+                  />
+                  <AvatarFallback>
+                    {chatData?.otherUser.name?.[0] ?? "U"}
+                  </AvatarFallback>
+                </Avatar>
+                {isOtherOnline && (
+                  <span
+                    className={`absolute top-0 right-0 h-2 w-2 rounded-full bg-green-500`}
+                  ></span>
+                )}
+              </div>
               <div className="flex flex-col">
                 <h3 className="text-sm font-medium">
                   {chatData?.otherUser.name}
@@ -195,11 +204,6 @@ const RideChatPage = ({
                   {chatData?.otherUser.rating?.toFixed(1) ?? "0"}/5
                 </div>
               </div>
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  isOtherOnline ? "bg-green-500" : "bg-gray-400"
-                }`}
-              />
             </div>
           </div>
 
