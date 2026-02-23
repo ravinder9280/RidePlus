@@ -15,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/chat",
   "/api/cron/(.*)",
   "/rides/search(.*)",
+  "/rides/messages/list(.*)",
   "/rides(.*)",
 ]);
 

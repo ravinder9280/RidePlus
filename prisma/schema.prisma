@@ -4,63 +4,68 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+
   directUrl = env("DIRECT_URL")
-  
 }
 
 model users {
-  id          String       @id @default(cuid())
-  clerkId     String       @unique
-  email       String?      @unique
-  phone       String?      @unique
-  name        String?
-  firstName   String?
-  lastName    String?
-  imageUrl    String?
-  rating      Int          @default(5)
-  rides       rides[]       @relation("UserRides")
-  memberships ride_members[]
-  messages ride_messages[]
+  id                  String          @id @default(cuid())
+  clerkId             String          @unique
+  email               String?         @unique
+  phone               String?         @unique
+  name                String?
+  firstName           String?
+  lastName            String?
+  imageUrl            String?
+  rating              Int             @default(5)
+  rides               rides[]         @relation("UserRides")
+  memberships         ride_members[]
+  messages            ride_messages[]
+  chatsAsParticipantA ride_chats[]    @relation("ParticipantA")
+  chatsAsParticipantB ride_chats[]    @relation("ParticipantB")
+
   @@index([clerkId])
 }
 
 model ride_chats {
-  id        String   @id @default(cuid())
-  rideId    String   
-  participantA  String
-  participantB  String
-  isActive  Boolean  @default(true) // becomes false when ride is completed/cancelled
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  ride     rides            @relation(fields: [rideId], references: [id], onDelete: Cascade)
-  messages ride_messages[]  
-  
+  id           String   @id @default(cuid())
+  rideId       String
+  participantA String
+  participantB String
+  isActive     Boolean  @default(true) // becomes false when ride is completed/cancelled
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  ride             rides           @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  messages         ride_messages[]
+  participantAUser users           @relation("ParticipantA", fields: [participantA], references: [id])
+  participantBUser users           @relation("ParticipantB", fields: [participantB], references: [id])
+
+  @@unique([rideId, participantA, participantB])
   @@index([rideId])
   @@index([isActive])
-  @@unique([rideId, participantA, participantB])
 }
 
 model ride_messages {
   id        String   @id @default(cuid())
   chatId    String
-  senderId  String   // userId from users table
+  senderId  String // userId from users table
   content   String   @db.Text
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   chat   ride_chats @relation(fields: [chatId], references: [id], onDelete: Cascade)
   sender users      @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  
+
   @@index([chatId, createdAt])
   @@index([senderId])
 }
+
 model rides {
-  id             String       @id @default(cuid())
+  id             String           @id @default(cuid())
   ownerId        String
   fromText       String
   toText         String
@@ -75,16 +80,17 @@ model rides {
   perSeatPrice   Int
   service        RideService
   shareUrlEnc    String?
-  shareUrlHash   String?      @unique
-  status         RideStatus   @default(ACTIVE)
-  isVerified     Boolean      @default(false)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  owner          users        @relation("UserRides", fields: [ownerId], references: [id], onDelete: Cascade)
+  shareUrlHash   String?          @unique
+  status         RideStatus       @default(ACTIVE)
+  isVerified     Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  owner          users            @relation("UserRides", fields: [ownerId], references: [id], onDelete: Cascade)
   members        ride_members[]
   embedding      ride_embeddings?
   canonicalText  String?
   chat           ride_chats[]
+
   @@index([status, departureAt])
   @@index([ownerId])
   @@index([fromLat, fromLng])
@@ -100,22 +106,23 @@ model ride_members {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   seatsRequested Int          @default(1)
-  ride           rides         @relation(fields: [rideId], references: [id], onDelete: Cascade)
-  user           users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ride           rides        @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  user           users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   canonicalText  String?
+
   @@unique([rideId, userId])
   @@index([userId])
 }
+
 model ride_embeddings {
-  rideId    String  @id
-  ride      rides    @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  rideId String @id
+  ride   rides  @relation(fields: [rideId], references: [id], onDelete: Cascade)
 
   embedding Unsupported("vector(768)")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 model webhook_event {
   id        String   @id

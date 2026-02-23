@@ -208,13 +208,13 @@ const RideChatPage = ({
           </div>
 
           <div className="flex items-center justify-between gap-2 px-4 py-2 border-b border-white/10">
-            <div>
+            <div className="flex-1">
               <div className="flex items-center gap-1">
-                <div className="text-sm font-medium line-clamp-1">
+                <div className="text-sm font-medium line-clamp-1 w-[40%] ">
                   {chatData?.ride.fromText}
                 </div>
                 <ArrowRight className="size-5" />
-                <div className="text-sm font-medium line-clamp-1">
+                <div className="text-sm font-medium line-clamp-1 w-[40%] ">
                   {chatData?.ride.toText}
                 </div>
               </div>

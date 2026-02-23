@@ -12,6 +12,7 @@ import {
   Home,
   User,
   LogOutIcon,
+  MessageCircle,
 } from "lucide-react";
 
 import {
@@ -22,7 +23,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { usePathname } from "next/navigation";
 import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
-import { cn } from "@/lib/utils";
 import NotificationBadge from "../common/NotificationBadge";
 import MobileNav from "./Mobile/mobile-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -65,6 +65,12 @@ const Navbar = () => {
         label: "Booked Rides",
         href: "/rides/booked",
         icon: Car,
+        image: "/phone-car.png",
+      },
+      {
+        label: "Messages",
+        href: "/rides/messages/list",
+        icon: MessageCircle,
         image: "/phone-car.png",
       },
       {
