@@ -22,6 +22,12 @@ export async function GET(
     }
 
     const { rideId, userId: otherUserId } = params;
+    if (currentDbUser.id === otherUserId) {
+      return NextResponse.json(
+        { error: "You cannot chat with yourself" },
+        { status: 400 },
+      );
+    }
 
     const ride = await prisma.rides.findUnique({
       where: { id: rideId },
@@ -56,11 +62,9 @@ export async function GET(
       );
     }
 
-    // ⭐ chat id
     const sorted = [currentDbUser.id, otherUserId].sort();
     const chatId = `${rideId}-${sorted[0]}-${sorted[1]}`;
 
-    // ⭐ create chat if missing
     await prisma.ride_chats.upsert({
       where: { id: chatId },
       create: {
@@ -73,7 +77,6 @@ export async function GET(
       update: {},
     });
 
-    // ⭐ fetch messages (correct shape)
     const dbMessages = await prisma.ride_messages.findMany({
       where: { chatId },
       orderBy: { createdAt: "asc" },
@@ -81,6 +84,7 @@ export async function GET(
         id: true,
         content: true,
         createdAt: true,
+        isRead: true,
         sender: {
           select: {
             id: true,
@@ -98,6 +102,7 @@ export async function GET(
       sender_name: m.sender.name,
       profile_image: m.sender.imageUrl,
       created_at: m.createdAt,
+      isRead: m.isRead,
     }));
 
     return NextResponse.json({

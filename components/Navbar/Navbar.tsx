@@ -170,6 +170,12 @@ const Navbar = () => {
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
+                              <Link href="/rides/messages/list">
+                                <MessageCircle />
+                                Messages
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
                               <Link href="/rides/booked">
                                 <Car />
                                 Booked Rides

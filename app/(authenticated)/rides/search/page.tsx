@@ -3,7 +3,7 @@ import React from "react";
 
 const RideSearchPage = () => {
   return (
-    <div>
+    <div className="h-[calc(100vh-100px)]  flex items-center justify-center ">
       <RideSearchForm />
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { supabaseClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,6 @@ import {
   ArrowRight,
   ChevronRight,
   MessageCircle,
-  MoveLeft,
   Send,
   Star,
 } from "lucide-react";
@@ -20,6 +19,8 @@ import { format, isToday, isYesterday } from "date-fns";
 import sendMessage from "@/actions/rides/message";
 import { useCurrentUserId } from "@/hooks/useCurrentUserId";
 import ChatSkeleton from "./components/chat-skeleton";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type Message = {
   message: string;
@@ -27,6 +28,7 @@ type Message = {
   sender_name: string | null;
   profile_image: string | null;
   created_at: string;
+  isRead: boolean;
 };
 type ChatInitData = {
   authorized: boolean;
@@ -45,9 +47,7 @@ type ChatInitData = {
     status: string;
   };
   chatId: string;
-  messages: {
-    content: string;
-  }[];
+  messages: Message[];
 };
 const RideChatPage = ({
   params,
@@ -60,19 +60,20 @@ const RideChatPage = ({
   const supabase = supabaseClient;
   const msgEndRef = useRef<HTMLDivElement>(null);
 
-  const getDateLabel = (date: Date) => {
+  const getDateLabel = useCallback((date: Date) => {
     if (isToday(date)) return "Today";
     if (isYesterday(date)) return "Yesterday";
 
     return format(date, "MMMM d, yyyy");
-  };
+  }, []);
   const otherUserId = params.userId;
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
   const [chatData, setChatData] = useState<ChatInitData | null>(null);
   const [isOtherOnline, setIsOtherOnline] = useState(false);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const channelRef = useRef<any>(null);
 
@@ -83,7 +84,11 @@ const RideChatPage = ({
     const init = async () => {
       const res = await fetch(`/api/rides/${rideId}/chat/${otherUserId}`);
       const data = await res.json();
-
+      if (!res.ok || data.error) {
+        toast.error(data.error || "Something went wrong");
+        router.push(`/rides/${rideId}`);
+        return;
+      }
       setChatData(data);
       setMessages(data.messages);
       setLoading(false);
@@ -106,7 +111,12 @@ const RideChatPage = ({
 
     channel
       .on("broadcast", { event: "message" }, (payload) => {
-        setMessages((prev) => [...prev, payload.payload]);
+        setMessages((prev) => {
+          if (prev.some((m) => m.created_at === payload.payload.created_at))
+            return prev;
+
+          return [...prev, payload.payload];
+        });
       })
 
       .on("presence", { event: "sync" }, () => {
@@ -129,34 +139,50 @@ const RideChatPage = ({
     channelRef.current = channel;
 
     return () => {
+      channel.unsubscribe();
       supabase.removeChannel(channel);
     };
   }, [chatData?.chatId, currentUserId, otherUserId, supabase]);
-  const handleSend = async () => {
-    if (!message.trim() || !channelRef.current) return;
 
-    const tempMessage = {
-      sender_id: currentUserId!,
+  const handleSend = async () => {
+    if (!message.trim() || !channelRef.current || !currentUserId) return;
+
+    const tempId = crypto.randomUUID();
+
+    const tempMessage: Message & { tempId?: string } = {
+      tempId,
+      sender_id: currentUserId,
       sender_name: user?.fullName || "User",
       profile_image: user?.imageUrl || null,
-      message,
+      message: message.trim(),
       created_at: new Date().toISOString(),
+      isRead: false,
     };
+
+    setMessages((prev) => [...prev, tempMessage]);
+
+    setMessage("");
 
     channelRef.current.send({
       type: "broadcast",
       event: "message",
       payload: tempMessage,
     });
-    console.log(messages);
 
-    sendMessage({
-      chatId: chatData?.chatId || "",
-      senderId: currentUserId || "",
-      message,
-      createdAt: tempMessage.created_at,
-    }).catch(console.error);
-    setMessage("");
+    try {
+      await sendMessage({
+        chatId: chatData?.chatId || "",
+        senderId: currentUserId,
+        message: tempMessage.message,
+        createdAt: tempMessage.created_at,
+      });
+    } catch (err) {
+      console.error(err);
+
+      setMessages((prev) => prev.filter((m: any) => m.tempId !== tempId));
+
+      toast.error("Failed to send message");
+    }
   };
 
   if (loading)
@@ -171,15 +197,18 @@ const RideChatPage = ({
       <div className="flex flex-col h-full max-w-2xl w-full mx-auto">
         <div className="sticky top-0 z-10">
           <div className="flex items-center gap-2 px-4 py-2 border-b border-white/10">
-            <Link
-              href={`/rides/${rideId}`}
+            <button
+              onClick={() => router.back()}
               className="hover:text-muted-foreground transition-colors p-1 hover:bg-white/10 rounded-full"
             >
               <ArrowLeft className="size-6 text-primary" />
-            </Link>
+            </button>
             <div className="flex items-center gap-2">
-              <div className="relative">
-                <Avatar className="size-8 ">
+              <Link
+                className="relative hover:ring-1 hover:ring-primary rounded-full"
+                href={`/users/${chatData?.otherUser.id}`}
+              >
+                <Avatar className="size-10 ">
                   <AvatarImage
                     src={chatData?.otherUser.imageUrl ?? undefined}
                   />
@@ -192,7 +221,7 @@ const RideChatPage = ({
                     className={`absolute top-0 right-0 h-2 w-2 rounded-full bg-green-500`}
                   ></span>
                 )}
-              </div>
+              </Link>
               <div className="flex flex-col">
                 <h3 className="text-sm font-medium">
                   {chatData?.otherUser.name}
@@ -207,29 +236,31 @@ const RideChatPage = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-2 px-4 py-2 border-b border-white/10">
-            <div className="flex-1">
-              <div className="flex items-center gap-1">
-                <div className="text-sm font-medium line-clamp-1 w-[40%] ">
-                  {chatData?.ride.fromText}
+          <Link className=" " href={`/rides/${rideId}`}>
+            <div className="flex items-center justify-between gap-2 px-4 py-2 border-b border-white/10 hover:bg-white/10 transition-colors">
+              <div className="flex-1">
+                <div className="flex items-center gap-1">
+                  <div className="text-sm font-medium line-clamp-1 w-[40%] ">
+                    {chatData?.ride.fromText}
+                  </div>
+                  <ArrowRight className="size-5" />
+                  <div className="text-sm font-medium line-clamp-1 w-[40%] ">
+                    {chatData?.ride.toText}
+                  </div>
                 </div>
-                <ArrowRight className="size-5" />
-                <div className="text-sm font-medium line-clamp-1 w-[40%] ">
-                  {chatData?.ride.toText}
+                <div>
+                  <span className="text-sm text-muted-foreground">
+                    {chatData?.ride.departureAt &&
+                      format(
+                        new Date(chatData?.ride.departureAt as Date),
+                        "MMM d, yyyy , h:mm a",
+                      )}
+                  </span>
                 </div>
               </div>
-              <div>
-                <span className="text-sm text-muted-foreground">
-                  {chatData?.ride.departureAt &&
-                    format(
-                      new Date(chatData?.ride.departureAt as Date),
-                      "MMM d, yyyy , h:mm a",
-                    )}
-                </span>
-              </div>
+              <ChevronRight className="size-6 text-muted-foreground" />
             </div>
-            <ChevronRight className="size-6 text-muted-foreground" />
-          </div>
+          </Link>
         </div>
 
         <div className=" flex-1 p-4 space-y-6 h-full overflow-y-auto">
@@ -244,7 +275,7 @@ const RideChatPage = ({
               currentDate.toDateString() !== prevDate.toDateString();
 
             return (
-              <>
+              <React.Fragment key={msg.created_at}>
                 {showDateSeparator && (
                   <div className="flex justify-center my-3">
                     <span className="text-xs px-3 py-1 rounded-full bg-muted text-muted-foreground">
@@ -254,7 +285,6 @@ const RideChatPage = ({
                 )}
 
                 <div
-                  key={index}
                   className={`flex gap-2  ${msg.sender_id === currentUserId ? "justify-end" : "justify-start"}`}
                 >
                   <div
@@ -274,7 +304,7 @@ const RideChatPage = ({
                     </span>
                   </div>
                 </div>
-              </>
+              </React.Fragment>
             );
           })}
           <div ref={msgEndRef} />

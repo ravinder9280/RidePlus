@@ -15,7 +15,7 @@ export function DateSelector({
   date,
   setDate,
 }: {
-  date: Date;
+  date: Date | undefined;
   setDate: (date: Date) => void;
 }) {
   const [open, setOpen] = React.useState(false);

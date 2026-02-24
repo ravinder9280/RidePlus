@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { SeatSelector } from "@/components/ui/seat-selector";
-// ----- Zod schema for client-side validation -----
+import { DateSelector } from "@/components/common/date-selector";
+import { format } from "date-fns";
 const PublishRideSchema = z
   .object({
     fromText: z.string().min(3, "Enter a valid pickup"),
@@ -26,7 +27,6 @@ const PublishRideSchema = z
     service: z.enum(["UBER", "OLA", "OWNER"]),
   })
   .superRefine((data, ctx) => {
-    // from and to must not be the same coordinate
     const same =
       Math.abs(data.fromLat - data.toLat) < 1e-6 &&
       Math.abs(data.fromLng - data.toLng) < 1e-6;
@@ -57,7 +57,7 @@ const PublishRideSchema = z
         message: "Departure must be in the future",
       });
     }
-    const maxAhead = 180 * 24 * 60 * 60 * 1000; // ~180 days
+    const maxAhead = 180 * 24 * 60 * 60 * 1000;
     if (when.getTime() - now.getTime() > maxAhead) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -71,6 +71,9 @@ export default function PublishRideForm() {
   const [pending, startTransition] = useTransition();
   const [formKey, setFormKey] = useState(0);
   const [seatsTotal, setSeatsTotal] = useState(1);
+  const [departureDate, setDepartureDate] = useState<Date | undefined>(
+    undefined,
+  );
   const formRef = useRef<HTMLFormElement>(null);
 
   const onAction = async (formData: FormData) => {
@@ -137,7 +140,12 @@ export default function PublishRideForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Date</label>
-          <Input type="date" name="departureDate" required />
+          <DateSelector date={departureDate} setDate={setDepartureDate} />
+          <input
+            type="hidden"
+            name="departureDate"
+            value={departureDate ? format(departureDate, "yyyy-MM-dd") : ""}
+          />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Time</label>
