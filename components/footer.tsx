@@ -87,7 +87,7 @@ export const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-16 bg-accent  ">
+    <footer className="relative mt-16 bg-accent py-12 ">
       <div className="mx-auto max-w-5xl md:border-x">
         <div className="bg-border absolute inset-x-0 h-px w-full" />
         <div className="grid max-w-4xl grid-cols-6 gap-6 p-4">
@@ -104,14 +104,14 @@ export const Footer = () => {
             </p>
             <div className="flex gap-2">
               {socialLinks.map((item, i) => (
-                <a
+                <Link
                   key={i}
                   className="hover:bg-accent rounded-md border p-1.5"
                   target="_blank"
                   href={item.link}
                 >
                   {item.icon}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -121,13 +121,13 @@ export const Footer = () => {
             </span>
             <div className="flex flex-col gap-1">
               {resources.map(({ href, title }, i) => (
-                <a
+                <Link
                   key={i}
                   className={`w-max py-1 text-sm duration-200 hover:underline`}
                   href={href}
                 >
                   {title}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -135,13 +135,13 @@ export const Footer = () => {
             <span className="text-muted-foreground mb-1 text-xs">Company</span>
             <div className="flex flex-col gap-1">
               {company.map(({ href, title }, i) => (
-                <a
+                <Link
                   key={i}
                   className={`w-max py-1 text-sm duration-200 hover:underline`}
                   href={href}
                 >
                   {title}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -149,8 +149,8 @@ export const Footer = () => {
         <div className="bg-border absolute inset-x-0 h-px w-full" />
         <div className="flex max-w-4xl flex-col justify-between gap-2 pt-2 pb-5">
           <p className="text-muted-foreground text-center font-thin">
-            © <a href="https://x.com/Ravinder387573">Ravinder</a>. All rights
-            reserved {year}
+            © <Link href="https://x.com/Ravinder387573">Ravinder</Link>. All
+            rights reserved {year}
           </p>
         </div>
       </div>
