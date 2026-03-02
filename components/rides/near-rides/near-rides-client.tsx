@@ -1,9 +1,8 @@
-// app/(home)/near-rides-client.tsx
 "use client";
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner"; // or "@/components/ui/use-toast" if you use shadcn’s toast
+import { toast } from "sonner";
 import RideCard from "../ride-card";
 import { Ride } from "@/lib/types/Ride";
 
@@ -22,7 +21,7 @@ export default function NearRidesClient({
     }
   }, [error]);
 
-  if (!rides || rides.length < 0) return null;
+  if (!rides || rides.length === 0) return null;
 
   return (
     <section className="space-y-3 mx-auto container xl:p-0">

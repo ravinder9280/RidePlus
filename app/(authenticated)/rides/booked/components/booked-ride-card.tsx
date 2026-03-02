@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 interface MyRideCardProp {
   id: string;
   fromText: string;
@@ -34,11 +35,22 @@ interface MyRideCardProp {
   }[];
 }
 
-export const MyRideCard = ({ ride }: { ride: MyRideCardProp }) => {
+export const BookedRideCard = ({
+  ride,
+  status,
+}: {
+  ride: MyRideCardProp;
+  status: "upcoming" | "completed" | "cancelled";
+}) => {
   return (
     <div
+      className={cn(
+        "shadow-xl relative   border border-white/5  rounded-lg p-5",
+        status === "upcoming"
+          ? "dark:bg-[#2A272D]"
+          : "opacity-50 pointer-events-none",
+      )}
       key={ride.id}
-      className="shadow-xl relative  bg-[#2A272D] border border-white/5  rounded-lg p-5"
     >
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger className="absolute top-1 right-1" asChild>

@@ -10,34 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-const company = [
-  {
-    title: "About Us",
-    href: "#",
-  },
-  {
-    title: "Careers",
-    href: "#",
-  },
-  {
-    title: "Brand assets",
-    href: "#",
-  },
-  {
-    title: "Privacy Policy",
-    href: "#",
-  },
-  {
-    title: "Terms of Service",
-    href: "#",
-  },
-];
-
 const socialLinks = [
-  {
-    icon: <FacebookIcon className="size-4" />,
-    link: "#",
-  },
   {
     icon: <GithubIcon className="size-4" />,
     link: "#",
@@ -54,32 +27,25 @@ const socialLinks = [
     icon: <TwitterIcon className="size-4" />,
     link: "#",
   },
-  {
-    icon: <YoutubeIcon className="size-4" />,
-    link: "#",
-  },
 ];
 
-const resources = [
+const quickLinks = [
   {
-    title: "Blog",
-    href: "#",
+    title: "Home",
+    href: "/",
   },
   {
-    title: "Help Center",
-    href: "#",
+    title: "Search Rides",
+    href: "/rides/search",
   },
   {
-    title: "Contact Support",
-    href: "#",
+    title: "Explore Rides",
+    href: "/rides",
   },
+
   {
-    title: "Community",
-    href: "#",
-  },
-  {
-    title: "Security",
-    href: "#",
+    title: "Post a Ride",
+    href: "/rides/new",
   },
 ];
 
@@ -87,67 +53,49 @@ export const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-16 bg-accent py-12 ">
-      <div className="mx-auto max-w-5xl md:border-x">
-        <div className="bg-border absolute inset-x-0 h-px w-full" />
-        <div className="grid max-w-4xl grid-cols-6 gap-6 p-4">
-          <div className="col-span-6 flex flex-col gap-5 md:col-span-4">
-            <Link
-              href={"/"}
-              className="text-foreground font-poppins font-bold text-xl flex items-center cursor-pointer"
-            >
-              <CarFront className="text-primary" />
-              <span className="ml-2">RidePlus</span>
-            </Link>
-            <p className="text-muted-foreground max-w-sm font-mono text-sm text-balance">
+    <footer className="relative mt-16 dark:bg-black bg-white  border-t py-8 ">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div className=" flex flex-col items-center  ">
+            <CarFront className="text-primary size-10 mb-4" />
+
+            <h3 className="mb-4 font-semibold text-lg">RidePlus</h3>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
               A comprehensive ride sharing platform for your journey.
             </p>
-            <div className="flex gap-2">
-              {socialLinks.map((item, i) => (
-                <Link
-                  key={i}
-                  className="hover:bg-accent rounded-md border p-1.5"
-                  target="_blank"
-                  href={item.link}
-                >
-                  {item.icon}
-                </Link>
-              ))}
-            </div>
           </div>
-          <div className="col-span-3 w-full md:col-span-1">
-            <span className="text-muted-foreground mb-1 text-xs">
-              Resources
-            </span>
-            <div className="flex flex-col gap-1">
-              {resources.map(({ href, title }, i) => (
-                <Link
-                  key={i}
-                  className={`w-max py-1 text-sm duration-200 hover:underline`}
-                  href={href}
-                >
-                  {title}
-                </Link>
+          <div className="flex items-center flex-col justify-center">
+            <h3 className=" mb-4 text-lg font-semibold ">Quick Links</h3>
+            <ul className="space-y-2">
+              {quickLinks.map(({ href, title }, i) => (
+                <li key={i} className="items-center justify-center flex">
+                  <Link
+                    className={`text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors  duration-200`}
+                    href={href}
+                  >
+                    {title}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
-          <div className="col-span-3 w-full md:col-span-1">
-            <span className="text-muted-foreground mb-1 text-xs">Company</span>
-            <div className="flex flex-col gap-1">
-              {company.map(({ href, title }, i) => (
-                <Link
-                  key={i}
-                  className={`w-max py-1 text-sm duration-200 hover:underline`}
-                  href={href}
-                >
-                  {title}
-                </Link>
+          <div className=" flex items-center  flex-col">
+            <h3 className=" mb-4 text-lg font-semibold ">Follow Me</h3>
+            <ul className="flex items-center gap-2">
+              {socialLinks.map(({ icon, link }, i) => (
+                <li key={i}>
+                  <Link
+                    className={` transition-colors duration-200 p-2 flex items-center justify-center bg-white/10 border rounded-full`}
+                    href={link}
+                  >
+                    {icon}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
-        <div className="bg-border absolute inset-x-0 h-px w-full" />
-        <div className="flex max-w-4xl flex-col justify-between gap-2 pt-2 pb-5">
+        <div className="mt-8 border-t border-zinc-200 dark:border-zinc-700 pt-8 text-center w-full flex items-center justify-center gap-2">
           <p className="text-muted-foreground text-center font-thin">
             © <Link href="https://x.com/Ravinder387573">Ravinder</Link>. All
             rights reserved {year}

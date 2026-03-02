@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { MemberStatus } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { MyRideCard } from "../components/booked-ride-card";
+import { BookedRideCard } from "../components/booked-ride-card";
+
 const rideCardSelect = {
   id: true,
   fromText: true,
@@ -63,7 +64,7 @@ const CompletedRidePage = async () => {
       ) : (
         <div className=" grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {rides.map((ride) => (
-            <MyRideCard key={ride.id} ride={ride} />
+            <BookedRideCard status="completed" key={ride.id} ride={ride} />
           ))}
         </div>
       )}
