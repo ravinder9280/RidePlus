@@ -89,7 +89,7 @@ export const MyRideCard = ({ ride }: { ride: MyRideCardProp }) => {
 
         <div className="grid grid-cols-2 gap-4">
           <Button className="bg-primary" asChild>
-            <Link href={`/ride/${ride.id}`}>
+            <Link href={`/rides/${ride.id}`}>
               <LocateFixed />
               Track
             </Link>
