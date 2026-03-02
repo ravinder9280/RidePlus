@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import LatestRides from "@/components/rides/latest-rides";
 import { HomeCarousel } from "@/components/HomeCarousel";
 import ChatDialog from "@/components/chat/chatDialog";
+import { Footer } from "@/components/footer";
 export default async function HomePage({
   searchParams,
 }: {
@@ -22,26 +23,29 @@ export default async function HomePage({
   const denied = get("loc") === "denied" || !fromLat || !fromLng;
 
   return (
-    <main className=" mx-auto mt-[4rem] w-full sm:p-4 md:p-6 lg:p-8 p-2  space-y-6">
-      {denied && <AllowLocationBanner />}
-      <HomeCarousel />
-      <MobileTabs />
-      <LocationInit />
+    <>
+      <main className=" mx-auto mt-[4rem] w-full sm:p-4 md:p-6 lg:p-8 p-2  space-y-6">
+        {denied && <AllowLocationBanner />}
+        <HomeCarousel />
+        <MobileTabs />
+        <LocationInit />
 
-      <Suspense fallback={<ListSkeleton />}>
-        {fromLat && fromLng ? (
-          <NearRides
-            lat={parseFloat(fromLat)}
-            lng={parseFloat(fromLng)}
-            radiusKm={10}
-            pageSize={6}
-          />
-        ) : null}
-      </Suspense>
-      <Suspense fallback={<ListSkeleton />}>
-        <LatestRides />
-      </Suspense>
-      <ChatDialog />
-    </main>
+        <Suspense fallback={<ListSkeleton />}>
+          {fromLat && fromLng ? (
+            <NearRides
+              lat={parseFloat(fromLat)}
+              lng={parseFloat(fromLng)}
+              radiusKm={10}
+              pageSize={6}
+            />
+          ) : null}
+        </Suspense>
+        <Suspense fallback={<ListSkeleton />}>
+          <LatestRides />
+        </Suspense>
+        <ChatDialog />
+      </main>
+      <Footer />
+    </>
   );
 }

@@ -12,6 +12,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { SeatSelector } from "@/components/ui/seat-selector";
 import { DateSelector } from "@/components/common/date-selector";
 import { format } from "date-fns";
+import { TimePicker } from "@/components/ui/time-picker";
+
 const PublishRideSchema = z
   .object({
     fromText: z.string().min(3, "Enter a valid pickup"),
@@ -38,8 +40,7 @@ const PublishRideSchema = z
       });
     }
 
-    // Combine date + time and ensure it's in the future (≤ 180 days ahead)
-    const iso = `${data.departureDate}T${data.departureTime}:00`;
+    const iso = `${data.departureDate}T${data.departureTime}`;
     const when = new Date(iso);
     if (Number.isNaN(when.getTime())) {
       ctx.addIssue({
@@ -71,6 +72,9 @@ export default function PublishRideForm() {
   const [pending, startTransition] = useTransition();
   const [formKey, setFormKey] = useState(0);
   const [seatsTotal, setSeatsTotal] = useState(1);
+  const [departureTime, setDepartureTime] = useState<Date>(
+    new Date("2026-03-01T00:00:00"),
+  );
   const [departureDate, setDepartureDate] = useState<Date | undefined>(
     undefined,
   );
@@ -78,6 +82,7 @@ export default function PublishRideForm() {
 
   const onAction = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
+    console.log(data);
 
     const parsed = PublishRideSchema.safeParse({
       fromText: data.fromText,
@@ -149,7 +154,16 @@ export default function PublishRideForm() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Time</label>
-          <Input type="time" name="departureTime" required />
+          <TimePicker
+            use12HourFormat={true}
+            value={departureTime}
+            onChange={setDepartureTime}
+          />
+          <input
+            type="hidden"
+            name="departureTime"
+            value={departureTime ? format(departureTime, "HH:mm:ss") : ""}
+          />
         </div>
       </div>
 
@@ -173,6 +187,7 @@ export default function PublishRideForm() {
           <Input
             type="number"
             name="estTotalFare"
+            placeholder=" eg. ₹2000"
             min={1}
             max={5000}
             required
