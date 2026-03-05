@@ -5,10 +5,12 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { MapPin } from "lucide-react";
 import MapboxAutocomplete from "../location/autocomplete";
+import { cn } from "@/lib/utils";
 
 export default function LocationDialogInput({
   namePrefix,
   placeholder,
+  className = "",
   required = true,
   initialValue, // Add this
   initialCoords, // Add this
@@ -16,6 +18,7 @@ export default function LocationDialogInput({
   label?: string;
   namePrefix: "from" | "to";
   placeholder?: string;
+  className?: string;
   required?: boolean;
   initialValue?: string; // Add this
   initialCoords?: { lat: number; lng: number }; // Add this
@@ -42,7 +45,10 @@ export default function LocationDialogInput({
       {/* Fake input that opens dialog */}
       <div
         onClick={() => setOpen(true)}
-        className="flex items-center cursor-pointer justify-between h-12 w-full rounded-md bg-muted/20 gap-2   px-3 py-1 text-base shadow-sm "
+        className={cn(
+          "flex items-center cursor-pointer justify-between h-12 w-full rounded-md bg-muted/20 gap-2   px-3 py-1 text-base shadow-sm ",
+          className,
+        )}
       >
         <Input
           type="text"
@@ -50,7 +56,7 @@ export default function LocationDialogInput({
           value={value}
           placeholder={placeholder}
           required={required}
-          className=" bg-transparent p-0 cursor-pointer focus-visible:ring-0 "
+          className=" bg-transparent p-0 cursor-pointer focus-visible:ring-0 shadow-none "
         />
         <MapPin className="text-muted-foreground h-4 w-4" />
       </div>

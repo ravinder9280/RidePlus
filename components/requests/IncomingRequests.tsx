@@ -75,7 +75,7 @@ export default function IncomingRequestsClient({
             userImage={m.user.imageUrl || "/logo.png"}
           />
 
-          <Link href={`/ride/${m.ride.id}`}>
+          <Link href={`/rides/${m.ride.id}`}>
             <RidePin
               fromText={m.ride.fromText}
               toText={m.ride.toText}

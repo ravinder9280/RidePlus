@@ -41,7 +41,6 @@ export default function RootLayout({
           >
             <>
               <Toaster closeButton position="top-right" richColors={true} />
-              <Navbar />
               {children}
             </>
           </ThemeProvider>

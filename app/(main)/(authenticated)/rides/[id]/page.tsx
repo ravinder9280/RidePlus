@@ -1,6 +1,6 @@
-import RideMap from "@/app/(authenticated)/rides/[id]/components/ride-map";
-import { RideRequestDialog } from "@/app/(authenticated)/rides/[id]/components/ride-request-dialog";
-import RidePassengers from "@/app/(authenticated)/rides/[id]/components/ride-passengers";
+import RideMap from "@/app/(main)/(authenticated)/rides/[id]/components/ride-map";
+import { RideRequestDialog } from "@/app/(main)/(authenticated)/rides/[id]/components/ride-request-dialog";
+import RidePassengers from "@/app/(main)/(authenticated)/rides/[id]/components/ride-passengers";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";

@@ -14,7 +14,7 @@ const MobileTabs = () => {
     },
     {
       label: "Post a Ride",
-      href: "/ride/new",
+      href: "/rides/new",
       icon: PlusCircle,
       cta: true,
       image: "/car-plus.png",

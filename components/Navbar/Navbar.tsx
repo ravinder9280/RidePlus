@@ -32,6 +32,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
@@ -47,7 +48,12 @@ const Navbar = () => {
 
   const mobileSheetItems = useMemo(
     () => [
-      { label: "Home", href: "/", icon: Home, image: "/car-check.png" },
+      {
+        label: "Home",
+        href: "/dashboard",
+        icon: Home,
+        image: "/car-check.png",
+      },
       {
         label: "Explore Rides",
         href: "/rides/search",
@@ -102,7 +108,7 @@ const Navbar = () => {
           <div className="flex-1 flex items-center gap-4">
             <MobileNav navigationItems={mobileSheetItems} pathname={pathname} />
             <Link
-              href={"/"}
+              href={"/dashboard"}
               className="text-foreground font-poppins font-bold text-xl flex items-center cursor-pointer"
             >
               <CarFront className="text-primary" />
@@ -159,8 +165,15 @@ const Navbar = () => {
                             )}
                           </Avatar>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-44">
+                        <DropdownMenuContent
+                          align="end"
+                          className="w-60 dark:bg-[#1C1C1E] "
+                        >
                           <DropdownMenuGroup>
+                            <div className="px-2 py-1.5 text-sm font-semibold">
+                              My Account
+                            </div>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem asChild>
                               <Link
                                 href={userId ? `/user/${userId}` : "/profile"}
@@ -181,16 +194,15 @@ const Navbar = () => {
                                 Booked Rides
                               </Link>
                             </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <SignOutButton redirectUrl="/sign-in">
+                                <div className="flex items-center  gap-2">
+                                  <LogOutIcon className="text-red-500" />
+                                  <span className="text-red-500"> Logout</span>
+                                </div>
+                              </SignOutButton>
+                            </DropdownMenuItem>
                           </DropdownMenuGroup>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem asChild>
-                            <SignOutButton redirectUrl="/sign-in">
-                              <div className="flex items-center gap-2">
-                                <LogOutIcon />
-                                <span> Logout</span>
-                              </div>
-                            </SignOutButton>
-                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </NavigationMenuItem>

@@ -2,16 +2,17 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Ride } from "@/lib/types/Ride";
 import RideCard from "./ride-card";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { getUrl } from "@/lib/url";
-const pageSize = 6;
+const limit = 6;
 const LatestRides = async () => {
   const base = getUrl();
 
-  const res = await fetch(`${base}/api/rides/search?pageSize=${pageSize} `);
+  const res = await fetch(
+    `${base}/api/rides/?limit=${limit}&sort=created_desc`,
+  );
 
-  const { items = [] } = await res.json();
+  const { results: rides = [] } = await res.json();
 
   return (
     <section className="space-y-3 mx-auto container xl:p-0">
@@ -25,7 +26,7 @@ const LatestRides = async () => {
         </Button>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {items.map((r: Ride) => (
+        {rides.map((r: Ride) => (
           <RideCard key={r.id} r={r} />
         ))}
       </div>

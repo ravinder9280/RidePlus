@@ -10,13 +10,16 @@ import {
 } from "@/components/ui/popover";
 import { format, isToday, isTomorrow, startOfToday } from "date-fns";
 import { CalendarIcon, ChevronDownIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function DateSelector({
   date,
   setDate,
+  className = "",
 }: {
   date: Date | undefined;
   setDate: (date: Date) => void;
+  className?: string;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -31,7 +34,10 @@ export function DateSelector({
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className="w-full h-12 bg-muted/20 justify-between text-left font-normal"
+          className={cn(
+            "w-full h-12 bg-muted/20 justify-between text-left font-normal",
+            className,
+          )}
         >
           <div className="flex items-center ">
             <CalendarIcon className="size-4 text-muted-foreground" />

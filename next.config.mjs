@@ -3,7 +3,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 const nextConfig = {
   output: "standalone",
   images: {
-    domains: ["img.clerk.com"],
+    domains: ["img.clerk.com", "images.unsplash.com"],
   },
 
   eslint: {

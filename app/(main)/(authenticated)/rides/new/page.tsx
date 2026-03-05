@@ -1,4 +1,4 @@
-import PublishRideForm from "@/app/(authenticated)/rides/new/components/publish-ride-form";
+import PublishRideForm from "@/app/(main)/(authenticated)/rides/new/components/publish-ride-form";
 
 export default function PublishRidePage() {
   return (

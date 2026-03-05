@@ -53,7 +53,7 @@ export const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-16 dark:bg-black bg-white  border-t py-8 ">
+    <footer className="relative pt-16 dark:bg-black bg-white  border-t py-8 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div className=" flex flex-col items-center  ">
